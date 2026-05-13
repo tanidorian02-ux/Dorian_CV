@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flowly — Organisez et automatisez sans complexité</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white: #FFFFFF;
+  --bg: #FAFAFA;
+  --text: #0C0C0C;
+  --text2: #525252;
+  --text3: #A3A3A3;
+  --border: #E5E5E5;
+  --blue: #2563EB;
+  --blue-dark: #1D4ED8;
+  --dark: #0D0D0D;
+  --dark2: #171717;
+  --font: 'Inter', sans-serif;
+  --mono: 'JetBrains Mono', monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  color: var(--text);
+  background: var(--white);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ─── NAV ─── */
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  background: rgba(255,255,255,0.95);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 56px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav-logo span { color: var(--blue); }
+
+.nav-links {
+  display: flex;
+  gap: 36px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text2);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  transition: color 0.15s;
+}
+
+.nav-links a:hover { color: var(--text); }
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-login {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text2);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.nav-login:hover { color: var(--text); }
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--blue);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 9px 20px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.btn-primary:hover { background: var(--blue-dark); }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  padding: 9px 20px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.btn-ghost:hover { border-color: #999; }
+
+/* BURGER */
+.burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 6px;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
+.burger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text);
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.burger.open span:nth-child(2) { opacity: 0; }
+.burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* SLIDE PANEL */
+.nav-scrim {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 300;
+  opacity: 0;
+  transition: opacity 0.28s;
+}
+
+.nav-scrim.visible { display: block; }
+.nav-scrim.active { opacity: 1; }
+
+.nav-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 88vw;
+  max-width: 360px;
+  height: 100vh;
+  background: var(--white);
+  z-index: 400;
+  transform: translateX(100%);
+  transition: transform 0.28s ease-out;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 32px;
+  border-left: 1px solid var(--border);
+}
+
+.nav-panel.active { transform: translateX(0); }
+
+.panel-close {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 40px;
+}
+
+.panel-close button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  color: var(--text2);
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.panel-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-links li {
+  border-bottom: 1px solid var(--border);
+}
+
+.panel-links a {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+  padding: 18px 0;
+  transition: color 0.15s;
+}
+
+.panel-links a:hover { color: var(--blue); }
+
+.panel-cta {
+  margin-top: 36px;
+}
+
+.panel-cta .btn-primary {
+  width: 100%;
+  justify-content: center;
+  font-size: 14px;
+  padding: 13px 20px;
+}
+
+/* ─── HERO ─── */
+.hero {
+  min-height: calc(100vh - 58px);
+  display: grid;
+  grid-template-columns: 55fr 45fr;
+  align-items: center;
+  padding: 0 56px;
+  gap: 64px;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, #d1d5db 1px, transparent 1px);
+  background-size: 28px 28px;
+  opacity: 0.25;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 80px 0;
+}
+
+.hero-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--blue);
+  text-transform: uppercase;
+  margin-bottom: 28px;
+}
+
+.hero-title {
+  font-size: clamp(48px, 5.5vw, 80px);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  margin-bottom: 24px;
+  max-width: 560px;
+}
+
+.hero-title em {
+  font-style: normal;
+  color: var(--blue);
+}
+
+.hero-sub {
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--text2);
+  line-height: 1.65;
+  max-width: 420px;
+  margin-bottom: 40px;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.hero-actions .btn-primary {
+  font-size: 14px;
+  padding: 12px 26px;
+  border-radius: 4px;
+}
+
+.hero-actions .btn-ghost {
+  font-size: 14px;
+  padding: 12px 26px;
+}
+
+.hero-trust {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text3);
+  letter-spacing: 0.04em;
+}
+
+.hero-visual {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.hero-img-wrap {
+  width: 100%;
+  height: 560px;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.14), 0 0 0 1px var(--border);
+}
+
+.hero-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* ─── MARQUEE ─── */
+.marquee-strip {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 0;
+  overflow: hidden;
+  background: var(--white);
+}
+
+.marquee-inner {
+  display: flex;
+  white-space: nowrap;
+  animation: marquee 28s linear infinite;
+}
+
+.marquee-inner span {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text3);
+  padding: 0 40px;
+}
+
+.marquee-inner span.accent {
+  color: var(--blue);
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ─── STATS ─── */
+.stats-section {
+  padding: 96px 56px;
+  border-bottom: 1px solid var(--border);
+}
+
+.stats-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 72px;
+  gap: 40px;
+}
+
+.stats-header-title {
+  font-size: clamp(32px, 3.5vw, 52px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  max-width: 480px;
+}
+
+.stats-header-note {
+  font-size: 14px;
+  color: var(--text2);
+  max-width: 280px;
+  text-align: right;
+  line-height: 1.6;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--border);
+}
+
+.stat-item {
+  padding: 48px 40px 48px 0;
+  border-right: 1px solid var(--border);
+}
+
+.stat-item:last-child { border-right: none; padding-left: 40px; }
+.stat-item:nth-child(2) { padding-left: 40px; }
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 12px;
+}
+
+.stat-number {
+  font-size: clamp(56px, 7vw, 96px);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: var(--text);
+}
+
+.stat-number span {
+  font-size: 0.45em;
+  color: var(--blue);
+  font-weight: 700;
+  vertical-align: super;
+  letter-spacing: -0.02em;
+}
+
+/* ─── PROBLEM / SOLUTION ─── */
+.split-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 560px;
+}
+
+.split-dark {
+  background: var(--dark);
+  padding: 80px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  position: relative;
+  overflow: hidden;
+}
+
+.split-dark-img {
+  position: absolute;
+  inset: 0;
+  background-image: url('../test_site/01_flowy/22.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
+}
+
+.split-dark-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.split-dark-title {
+  font-size: clamp(32px, 3vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: #fff;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.split-dark-body {
+  font-size: 15px;
+  color: rgba(255,255,255,0.55);
+  line-height: 1.7;
+  max-width: 360px;
+  position: relative;
+}
+
+.split-light {
+  background: var(--bg);
+  padding: 80px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-left: 1px solid var(--border);
+}
+
+.split-light-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 24px;
+}
+
+.split-light-title {
+  font-size: clamp(32px, 3vw, 48px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+.split-light-body {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.7;
+  max-width: 360px;
+}
+
+/* ─── FEATURES ─── */
+.features-section {
+  padding: 0;
+}
+
+.feature-band {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+  min-height: 480px;
+}
+
+.feature-band.reverse { direction: rtl; }
+.feature-band.reverse > * { direction: ltr; }
+
+.feature-img {
+  overflow: hidden;
+}
+
+.feature-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.feature-img:hover img { transform: scale(1.03); }
+
+.feature-content {
+  padding: 72px 64px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 1px solid var(--border);
+}
+
+.feature-band.reverse .feature-content {
+  border-left: none;
+  border-right: 1px solid var(--border);
+}
+
+.feature-index {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--text3);
+  margin-bottom: 24px;
+}
+
+.feature-title {
+  font-size: clamp(28px, 2.8vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--text);
+  margin-bottom: 20px;
+}
+
+.feature-body {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.7;
+  max-width: 360px;
+  margin-bottom: 32px;
+}
+
+.feature-points {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.feature-points li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text2);
+}
+
+.feature-points li::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  background: var(--blue);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M13.5 4L6 11.5 2.5 8' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+/* ─── DARK FEATURE BAND ─── */
+.feature-dark-band {
+  background: var(--dark2);
+  padding: 96px 56px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 96px;
+  align-items: center;
+}
+
+.feature-dark-content .feature-index { color: rgba(255,255,255,0.3); }
+
+.feature-dark-content .feature-title {
+  color: #fff;
+}
+
+.feature-dark-content .feature-body { color: rgba(255,255,255,0.55); }
+
+.feature-dark-content .feature-points li { color: rgba(255,255,255,0.6); }
+
+.feature-dark-content .feature-points li::before { background: #60a5fa; }
+
+.automation-visual {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auto-step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 6px;
+  padding: 16px 20px;
+  transition: background 0.2s;
+}
+
+.auto-step:hover { background: rgba(255,255,255,0.09); }
+
+.auto-step-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(37,99,235,0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.auto-step-icon svg {
+  width: 16px;
+  height: 16px;
+  stroke: #93c5fd;
+}
+
+.auto-step-text {
+  flex: 1;
+}
+
+.auto-step-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: rgba(255,255,255,0.35);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.auto-step-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.85);
+}
+
+.auto-arrow {
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.auto-arrow svg {
+  width: 16px;
+  height: 16px;
+  stroke: rgba(255,255,255,0.2);
+}
+
+/* ─── PRICING ─── */
+.pricing-section {
+  padding: 96px 56px;
+  border-top: 1px solid var(--border);
+}
+
+.pricing-header {
+  margin-bottom: 64px;
+}
+
+.pricing-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--blue);
+  margin-bottom: 20px;
+}
+
+.pricing-title {
+  font-size: clamp(36px, 4vw, 56px);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  color: var(--text);
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  max-width: 860px;
+}
+
+.pricing-card {
+  padding: 48px;
+}
+
+.pricing-card.highlighted {
+  background: var(--dark);
+  border-left: 1px solid rgba(255,255,255,0.08);
+}
+
+.pricing-tier {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text3);
+  margin-bottom: 20px;
+}
+
+.pricing-card.highlighted .pricing-tier { color: rgba(255,255,255,0.35); }
+
+.pricing-price {
+  font-size: 56px;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: var(--text);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.pricing-card.highlighted .pricing-price { color: #fff; }
+
+.pricing-price sub {
+  font-size: 20px;
+  font-weight: 600;
+  vertical-align: baseline;
+  letter-spacing: -0.02em;
+}
+
+.pricing-period {
+  font-size: 13px;
+  color: var(--text3);
+  margin-bottom: 36px;
+}
+
+.pricing-card.highlighted .pricing-period { color: rgba(255,255,255,0.3); }
+
+.pricing-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 40px;
+}
+
+.pricing-features li {
+  display: flex;
+  gap: 12px;
+  font-size: 14px;
+  color: var(--text2);
+  align-items: flex-start;
+}
+
+.pricing-card.highlighted .pricing-features li { color: rgba(255,255,255,0.6); }
+
+.pricing-features li::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  background: var(--blue);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M13.5 4L6 11.5 2.5 8' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+.pricing-card.highlighted .pricing-features li::before { background: #60a5fa; }
+
+.pricing-btn {
+  display: block;
+  text-align: center;
+  padding: 13px 24px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.pricing-btn-ghost {
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.pricing-btn-ghost:hover { border-color: #999; }
+
+.pricing-btn-blue {
+  background: var(--blue);
+  color: #fff;
+}
+
+.pricing-btn-blue:hover { background: var(--blue-dark); }
+
+/* ─── FINAL CTA ─── */
+.cta-section {
+  background: var(--dark);
+  padding: 120px 56px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.cta-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 28px;
+}
+
+.cta-title {
+  font-size: clamp(40px, 4.5vw, 64px);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.0;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.cta-title em {
+  font-style: normal;
+  color: var(--blue);
+}
+
+.cta-sub {
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.65;
+  margin-bottom: 40px;
+}
+
+.cta-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cta-actions .btn-primary {
+  font-size: 14px;
+  padding: 13px 28px;
+}
+
+.cta-actions .btn-ghost {
+  font-size: 14px;
+  padding: 13px 28px;
+  border-color: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.7);
+}
+
+.cta-actions .btn-ghost:hover {
+  border-color: rgba(255,255,255,0.5);
+  color: #fff;
+}
+
+.cta-visual {
+  position: relative;
+}
+
+.cta-img-wrap {
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+}
+
+.cta-img-wrap img {
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+  display: block;
+}
+
+/* ─── FOOTER ─── */
+footer {
+  border-top: 1px solid #1f1f1f;
+  background: var(--dark);
+  padding: 48px 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-logo {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: #fff;
+  text-decoration: none;
+}
+
+.footer-logo span { color: var(--blue); }
+
+.footer-copy {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: rgba(255,255,255,0.25);
+  letter-spacing: 0.04em;
+}
+
+.footer-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+
+.footer-links a {
+  font-size: 13px;
+  color: rgba(255,255,255,0.35);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+/* ─── SCROLL FADE ─── */
+.fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 1024px) {
+  nav { padding: 0 32px; }
+  .hero { padding: 0 32px; gap: 40px; }
+  .stats-section { padding: 72px 32px; }
+  .pricing-section { padding: 72px 32px; }
+  .cta-section { padding: 80px 32px; gap: 48px; }
+  footer { padding: 40px 32px; }
+  .split-dark { padding: 60px 32px; }
+  .split-light { padding: 60px 32px; }
+  .feature-content { padding: 56px 40px; }
+  .feature-dark-band { padding: 72px 32px; gap: 56px; }
+}
+
+@media (max-width: 768px) {
+  .nav-links, .nav-right { display: none; }
+  .burger { display: flex; }
+
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 48px 24px;
+    min-height: auto;
+    gap: 40px;
+  }
+
+  .hero-content { padding: 0; }
+  .hero-img-wrap { height: 280px; }
+
+  .stats-section { padding: 56px 24px; }
+  .stats-header { flex-direction: column; align-items: flex-start; }
+  .stats-header-note { text-align: left; }
+  .stats-row { grid-template-columns: 1fr; }
+  .stat-item { border-right: none; border-bottom: 1px solid var(--border); padding: 36px 0 !important; }
+  .stat-item:last-child { border-bottom: none; }
+
+  .split-section { grid-template-columns: 1fr; }
+  .split-light { border-left: none; border-top: 1px solid var(--border); }
+
+  .feature-band { grid-template-columns: 1fr; }
+  .feature-band.reverse { direction: ltr; }
+  .feature-img { height: 260px; }
+  .feature-content { padding: 48px 24px; border-left: none !important; border-right: none !important; border-top: 1px solid var(--border); }
+  .feature-band.reverse .feature-content { border-right: none; }
+
+  .feature-dark-band { grid-template-columns: 1fr; padding: 56px 24px; gap: 40px; }
+
+  .pricing-section { padding: 56px 24px; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .pricing-card.highlighted { border-left: none; border-top: 1px solid rgba(255,255,255,0.08); }
+
+  .cta-section { grid-template-columns: 1fr; padding: 64px 24px; gap: 40px; }
+  .cta-actions { flex-direction: column; align-items: flex-start; }
+
+  footer { flex-direction: column; gap: 24px; text-align: center; padding: 40px 24px; }
+  .footer-links { flex-wrap: wrap; justify-content: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Flow<span>ly</span></a>
+  <ul class="nav-links">
+    <li><a href="#features">Fonctionnalités</a></li>
+    <li><a href="#pricing">Tarifs</a></li>
+    <li><a href="#">Ressources</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="#" class="nav-login">Connexion</a>
+    <a href="#" class="btn-primary">Commencer gratuitement</a>
+  </div>
+  <button class="burger" aria-label="Menu" aria-expanded="false" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="nav-scrim" id="navScrim" onclick="toggleNav()"></div>
+<div class="nav-panel" id="navPanel" role="dialog" aria-modal="true">
+  <div class="panel-close">
+    <button onclick="toggleNav()" aria-label="Fermer">✕</button>
+  </div>
+  <ul class="panel-links">
+    <li><a href="#features" onclick="toggleNav()">Fonctionnalités</a></li>
+    <li><a href="#pricing" onclick="toggleNav()">Tarifs</a></li>
+    <li><a href="#" onclick="toggleNav()">Ressources</a></li>
+    <li><a href="#" onclick="toggleNav()">Connexion</a></li>
+  </ul>
+  <div class="panel-cta">
+    <a href="#" class="btn-primary">Commencer gratuitement →</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <p class="hero-label">Organisation &amp; Automatisation</p>
+    <h1 class="hero-title">Organisez.<br>Automatisez.<br><em>Avancez.</em></h1>
+    <p class="hero-sub">Flowly réunit vos tâches et vos workflows en un seul espace — sans complexité, sans jargon, sans friction.</p>
+    <div class="hero-actions">
+      <a href="#" class="btn-primary">Commencer gratuitement →</a>
+      <a href="#" class="btn-ghost">Voir la démo</a>
+    </div>
+    <p class="hero-trust">Gratuit 14 jours · Sans carte bancaire · Résiliation en 1 clic</p>
+  </div>
+  <div class="hero-visual">
+    <div class="hero-img-wrap">
+      <img src="../flowly/photo-1460925895917-afdab827c52f.jpg" alt="Dashboard Flowly" loading="eager">
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE 1 -->
+<div class="marquee-strip">
+  <div class="marquee-inner" aria-hidden="true">
+    <span>Organisation</span><span class="accent">·</span>
+    <span>Automatisation</span><span class="accent">·</span>
+    <span>Clarté</span><span class="accent">·</span>
+    <span>Simplicité</span><span class="accent">·</span>
+    <span>Fluidité</span><span class="accent">·</span>
+    <span>Collaboration</span><span class="accent">·</span>
+    <span>Workflows</span><span class="accent">·</span>
+    <span>Organisation</span><span class="accent">·</span>
+    <span>Automatisation</span><span class="accent">·</span>
+    <span>Clarté</span><span class="accent">·</span>
+    <span>Simplicité</span><span class="accent">·</span>
+    <span>Fluidité</span><span class="accent">·</span>
+    <span>Collaboration</span><span class="accent">·</span>
+    <span>Workflows</span><span class="accent">·</span>
+  </div>
+</div>
+
+<!-- STATS -->
+<section class="stats-section fade-in">
+  <div class="stats-header">
+    <h2 class="stats-header-title">Des équipes qui avancent plus vite, chaque jour.</h2>
+    <p class="stats-header-note">Flowly est utilisé par des freelances, créateurs et petites équipes dans 40+ pays.</p>
+  </div>
+  <div class="stats-row">
+    <div class="stat-item">
+      <p class="stat-label">Utilisateurs actifs</p>
+      <p class="stat-number">4<span>200+</span></p>
+    </div>
+    <div class="stat-item">
+      <p class="stat-label">Tâches automatisées</p>
+      <p class="stat-number">85<span>%</span></p>
+    </div>
+    <div class="stat-item">
+      <p class="stat-label">Temps pour démarrer</p>
+      <p class="stat-number">3<span>min</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM / SOLUTION -->
+<section class="split-section fade-in">
+  <div class="split-dark">
+    <div class="split-dark-img"></div>
+    <p class="split-dark-label">Le problème</p>
+    <h2 class="split-dark-title">Trop d'outils.<br>Trop de friction.</h2>
+    <p class="split-dark-body">Notion pour les notes, Zapier pour les automatisations, Trello pour les tâches — votre journée de travail se perd entre les onglets.</p>
+  </div>
+  <div class="split-light">
+    <p class="split-light-label">La solution</p>
+    <h2 class="split-light-title">Un seul espace.<br>Tout sous contrôle.</h2>
+    <p class="split-light-body">Flowly réunit organisation et automatisation dans une interface pensée pour les gens qui ont mieux à faire que de gérer leurs outils.</p>
+  </div>
+</section>
+
+<!-- MARQUEE 2 -->
+<div class="marquee-strip">
+  <div class="marquee-inner" style="animation-direction: reverse;" aria-hidden="true">
+    <span>Tâches</span><span class="accent">·</span>
+    <span>Workflows</span><span class="accent">·</span>
+    <span>Intégrations</span><span class="accent">·</span>
+    <span>Rappels</span><span class="accent">·</span>
+    <span>Tableaux de bord</span><span class="accent">·</span>
+    <span>Collaborateurs</span><span class="accent">·</span>
+    <span>Déclencheurs</span><span class="accent">·</span>
+    <span>Tâches</span><span class="accent">·</span>
+    <span>Workflows</span><span class="accent">·</span>
+    <span>Intégrations</span><span class="accent">·</span>
+    <span>Rappels</span><span class="accent">·</span>
+    <span>Tableaux de bord</span><span class="accent">·</span>
+    <span>Collaborateurs</span><span class="accent">·</span>
+    <span>Déclencheurs</span><span class="accent">·</span>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+
+  <!-- Feature 01 -->
+  <div class="feature-band fade-in">
+    <div class="feature-img">
+      <img src="../flowly/photo-1492724441997-5dc865305da7.jpg" alt="Espace de travail organisé">
+    </div>
+    <div class="feature-content">
+      <p class="feature-index">01 — Organisation</p>
+      <h3 class="feature-title">Votre espace de travail, enfin clair.</h3>
+      <p class="feature-body">Créez, organisez et priorisez vos tâches sans effort. Tout ce qui compte est visible au premier regard.</p>
+      <ul class="feature-points">
+        <li>Listes, tableaux et vues calendrier</li>
+        <li>Priorités visuelles sans paramétrage complexe</li>
+        <li>Tags, filtres et recherche instantanée</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Feature 02 -->
+  <div class="feature-band reverse fade-in">
+    <div class="feature-img">
+      <img src="../flowly/photo-1522202176988-66273c2fd55f.jpg" alt="Collaboration en équipe">
+    </div>
+    <div class="feature-content">
+      <p class="feature-index">02 — Collaboration</p>
+      <h3 class="feature-title">Travaillez ensemble, sans réunion de coordination.</h3>
+      <p class="feature-body">Partagez des espaces, assignez des tâches, suivez l'avancement en temps réel — sans email, sans friction.</p>
+      <ul class="feature-points">
+        <li>Espaces partagés par projet ou équipe</li>
+        <li>Commentaires et mentions directement sur les tâches</li>
+        <li>Notifications intelligentes, pas de bruit</li>
+      </ul>
+    </div>
+  </div>
+
+</section>
+
+<!-- DARK FEATURE — AUTOMATISATION -->
+<section class="feature-dark-band fade-in">
+  <div class="feature-dark-content">
+    <p class="feature-index">03 — Automatisation</p>
+    <h3 class="feature-title" style="color:#fff;">Configurez une fois.<br>Flowly s'occupe du reste.</h3>
+    <p class="feature-body">Créez des workflows automatisés en quelques clics — aucun code requis. Vos tâches répétitives disparaissent.</p>
+    <ul class="feature-points">
+      <li>Déclencheurs conditionnels simples à configurer</li>
+      <li>Connexion à vos outils existants (Gmail, Slack, Notion…)</li>
+      <li>Historique complet de chaque automatisation</li>
+    </ul>
+  </div>
+  <div class="automation-visual">
+    <div class="auto-step">
+      <div class="auto-step-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>
+        </svg>
+      </div>
+      <div class="auto-step-text">
+        <p class="auto-step-label">Déclencheur</p>
+        <p class="auto-step-name">Nouvelle tâche créée</p>
+      </div>
+    </div>
+    <div class="auto-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+    <div class="auto-step">
+      <div class="auto-step-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
+        </svg>
+      </div>
+      <div class="auto-step-text">
+        <p class="auto-step-label">Action</p>
+        <p class="auto-step-name">Assigner au bon collaborateur</p>
+      </div>
+    </div>
+    <div class="auto-arrow">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+    <div class="auto-step">
+      <div class="auto-step-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.12 1.22 2 2 0 012.1 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.06 6.06l1.27-.45a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+        </svg>
+      </div>
+      <div class="auto-step-text">
+        <p class="auto-step-label">Notification</p>
+        <p class="auto-step-name">Alerte Slack envoyée</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM PHOTO BAND -->
+<div style="height: 400px; overflow: hidden; border-top: 1px solid var(--border);">
+  <img src="../flowly/photo-1519389950473-47ba0277781c.jpg" alt="Équipe Flowly" style="width:100%; height:100%; object-fit:cover; object-position: center 40%;">
+</div>
+
+<!-- PRICING -->
+<section class="pricing-section fade-in" id="pricing">
+  <div class="pricing-header">
+    <p class="pricing-label">Tarifs</p>
+    <h2 class="pricing-title">Simple comme Flowly.</h2>
+  </div>
+  <div class="pricing-grid">
+    <div class="pricing-card">
+      <p class="pricing-tier">Gratuit</p>
+      <p class="pricing-price"><sub>€</sub>0</p>
+      <p class="pricing-period">Pour toujours</p>
+      <ul class="pricing-features">
+        <li>Jusqu'à 3 projets</li>
+        <li>5 automatisations par mois</li>
+        <li>1 collaborateur</li>
+        <li>Accès aux intégrations de base</li>
+      </ul>
+      <a href="#" class="pricing-btn pricing-btn-ghost">Commencer gratuitement</a>
+    </div>
+    <div class="pricing-card highlighted">
+      <p class="pricing-tier">Pro</p>
+      <p class="pricing-price" style="color:#fff;"><sub>€</sub>12</p>
+      <p class="pricing-period">par utilisateur / mois</p>
+      <ul class="pricing-features">
+        <li>Projets illimités</li>
+        <li>Automatisations illimitées</li>
+        <li>Collaborateurs illimités</li>
+        <li>Toutes les intégrations</li>
+        <li>Historique et analytics avancés</li>
+        <li>Support prioritaire</li>
+      </ul>
+      <a href="#" class="pricing-btn pricing-btn-blue">Essayer 14 jours gratuits →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-section fade-in">
+  <div>
+    <p class="cta-label">Prêt à démarrer</p>
+    <h2 class="cta-title">Moins de bruit.<br><em>Plus d'impact.</em></h2>
+    <p class="cta-sub">Rejoignez des milliers de freelances et équipes qui ont simplifié leur façon de travailler.</p>
+    <div class="cta-actions">
+      <a href="#" class="btn-primary">Commencer gratuitement →</a>
+      <a href="#" class="btn-ghost">Voir la démo</a>
+    </div>
+  </div>
+  <div class="cta-visual">
+    <div class="cta-img-wrap">
+      <img src="../flowly/photo-1522202176988-66273c2fd55f.jpg" alt="Équipe satisfaite">
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <a href="#" class="footer-logo">Flow<span>ly</span></a>
+  <ul class="footer-links">
+    <li><a href="#">Fonctionnalités</a></li>
+    <li><a href="#">Tarifs</a></li>
+    <li><a href="#">Confidentialité</a></li>
+    <li><a href="#">CGU</a></li>
+  </ul>
+  <p class="footer-copy">© 2026 Flowly. Tous droits réservés.</p>
+</footer>
+
+<script>
+function toggleNav() {
+  const burger = document.querySelector('.burger');
+  const panel = document.getElementById('navPanel');
+  const scrim = document.getElementById('navScrim');
+  const isOpen = panel.classList.contains('active');
+
+  if (isOpen) {
+    panel.classList.remove('active');
+    scrim.classList.remove('active');
+    burger.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+    setTimeout(() => scrim.classList.remove('visible'), 280);
+  } else {
+    scrim.classList.add('visible');
+    requestAnimationFrame(() => {
+      scrim.classList.add('active');
+      panel.classList.add('active');
+    });
+    burger.classList.add('open');
+    burger.setAttribute('aria-expanded', 'true');
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const panel = document.getElementById('navPanel');
+    if (panel.classList.contains('active')) toggleNav();
+  }
+});
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

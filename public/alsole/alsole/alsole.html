@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Al Sole — Trattoria</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #F0E8DC;
+      --brown:   #2C1A0E;
+      --green:   #5C7A4E;
+      --red:     #C0392B;
+      --cream:   #FAF6F0;
+      --muted:   #8A7060;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--brown);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2.5rem;
+      mix-blend-mode: multiply;
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 1.25rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cream);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      text-decoration: none;
+      color: var(--cream);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      opacity: 0.85;
+      transition: opacity 0.2s;
+    }
+
+    .nav-links a:hover { opacity: 1; }
+
+    /* ── HERO MOSAÏQUE ── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 600px;
+      overflow: hidden;
+    }
+
+    .mosaic {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: 55% 45%;
+      width: 100%;
+      height: 100%;
+      gap: 3px;
+    }
+
+    .mosaic-cell {
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Disposition asymétrique des 5 fragments */
+    .mosaic-cell:nth-child(1) { grid-column: 1 / 6;  grid-row: 1; }
+    .mosaic-cell:nth-child(2) { grid-column: 6 / 9;  grid-row: 1; }
+    .mosaic-cell:nth-child(3) { grid-column: 9 / 13; grid-row: 1 / 3; }
+    .mosaic-cell:nth-child(4) { grid-column: 1 / 4;  grid-row: 2; }
+    .mosaic-cell:nth-child(5) { grid-column: 4 / 9;  grid-row: 2; }
+
+    /* Couleurs évocatrices en attente des vraies photos */
+    .mosaic-cell:nth-child(1) { background: #4A2C1A; }  /* plat principal — brun chaud */
+    .mosaic-cell:nth-child(2) { background: #6B4C2A; }  /* mains / pâtes — ocre */
+    .mosaic-cell:nth-child(3) { background: #2C1A0E; }  /* ambiance salle — brun profond */
+    .mosaic-cell:nth-child(4) { background: #8B6B4A; }  /* céramique / détail — caramel */
+    .mosaic-cell:nth-child(5) { background: #3D5C35; }  /* table dressée — vert olive */
+
+    .mosaic-label {
+      position: absolute;
+      bottom: 0.75rem;
+      left: 0.75rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* Légère texture grain */
+    .mosaic-cell::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    /* Overlay gradient bas */
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        transparent 30%,
+        rgba(44, 26, 14, 0.55) 70%,
+        rgba(44, 26, 14, 0.85) 100%
+      );
+      pointer-events: none;
+    }
+
+    /* Nom du restaurant sur la mosaïque */
+    .hero-text {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 2.5rem 2.5rem 3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: rgba(240, 232, 220, 0.65);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-bottom: 0.6rem;
+    }
+
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(4.5rem, 10vw, 9rem);
+      line-height: 0.88;
+      letter-spacing: -0.02em;
+      color: var(--cream);
+    }
+
+    .hero-name em {
+      font-style: italic;
+      font-weight: 300;
+    }
+
+    .hero-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-top: 2rem;
+    }
+
+    .hero-tagline {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: rgba(240, 232, 220, 0.7);
+      max-width: 32ch;
+      line-height: 1.5;
+    }
+
+    .btn-reserve {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--brown);
+      background: var(--cream);
+      padding: 0.8rem 1.75rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s, color 0.2s;
+      flex-shrink: 0;
+    }
+
+    .btn-reserve:hover {
+      background: var(--green);
+      color: var(--cream);
+    }
+
+    /* ── SÉPARATEUR ÉDITORIAL ── */
+    .sep {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 2rem 2.5rem;
+      border-top: 1px solid rgba(44,26,14,0.15);
+      border-bottom: 1px solid rgba(44,26,14,0.15);
+    }
+
+    .sep-line {
+      flex: 1;
+      height: 1px;
+      background: rgba(44,26,14,0.12);
+    }
+
+    .sep-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* ── INTRO ── */
+    .intro {
+      padding: 5rem 2.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .intro-left {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--green);
+    }
+
+    .intro-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(2.25rem, 4vw, 3.25rem);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+    }
+
+    .intro-title em {
+      font-style: italic;
+      color: var(--red);
+    }
+
+    .intro-text {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: #5A4030;
+      max-width: 42ch;
+    }
+
+    .intro-right {
+      position: relative;
+      aspect-ratio: 4/5;
+      background: #6B4C2A;
+      overflow: hidden;
+    }
+
+    .intro-img-label {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── MENU / PRICING ── */
+    .menu {
+      padding: 5rem 2.5rem;
+      background: var(--brown);
+    }
+
+    .menu-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 4rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(240,232,220,0.12);
+    }
+
+    .menu-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 0.95;
+      color: var(--cream);
+      letter-spacing: -0.02em;
+    }
+
+    .menu-title em {
+      font-style: italic;
+      display: block;
+    }
+
+    .menu-season {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(240,232,220,0.35);
+      text-align: right;
+      line-height: 1.8;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem 5rem;
+    }
+
+    .menu-cat {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .menu-cat-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--green);
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(240,232,220,0.1);
+    }
+
+    .menu-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(240,232,220,0.07);
+    }
+
+    .menu-item:last-child { border-bottom: none; }
+
+    .menu-item-left { flex: 1; }
+
+    .menu-item-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: 1.05rem;
+      color: var(--cream);
+      line-height: 1.2;
+    }
+
+    .menu-item-desc {
+      font-size: 0.78rem;
+      color: rgba(240,232,220,0.4);
+      margin-top: 0.2rem;
+      line-height: 1.5;
+    }
+
+    .menu-item-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: 1rem;
+      color: rgba(240,232,220,0.6);
+      flex-shrink: 0;
+      font-style: italic;
+    }
+
+    .menu-note {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(240,232,220,0.1);
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.9rem;
+      color: rgba(240,232,220,0.3);
+      text-align: center;
+    }
+
+    /* ── CONTACT ── */
+    .contact {
+      padding: 6rem 2.5rem 5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .contact-left {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .contact-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 300;
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .contact-title em {
+      font-style: italic;
+      color: var(--green);
+    }
+
+    .contact-text {
+      font-size: 0.92rem;
+      line-height: 1.8;
+      color: #5A4030;
+      max-width: 38ch;
+    }
+
+    .contact-cta {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--cream);
+      background: var(--brown);
+      padding: 0.9rem 2rem;
+      text-decoration: none;
+      width: fit-content;
+      transition: background 0.2s;
+    }
+
+    .contact-cta:hover { background: var(--green); }
+
+    .contact-right {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      padding-top: 0.5rem;
+    }
+
+    .contact-block {
+      padding: 1.5rem 0;
+      border-bottom: 1px solid rgba(44,26,14,0.12);
+    }
+
+    .contact-block:first-child { border-top: 1px solid rgba(44,26,14,0.12); }
+
+    .contact-block-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--green);
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-block-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem;
+      color: var(--brown);
+      line-height: 1.6;
+    }
+
+    .contact-block-value a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .contact-block-value a:hover { color: var(--green); }
+
+    .contact-hours {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.2rem 1.25rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--brown);
+    }
+
+    .contact-hours .day { color: var(--muted); font-style: italic; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--brown);
+      padding: 1.75rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--cream);
+    }
+
+    .footer-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      color: rgba(240,232,220,0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.25rem; }
+      .nav-links { display: none; }
+
+      .hero-name { font-size: clamp(3rem, 12vw, 5rem); }
+      .hero-bottom { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+      .hero-text { padding: 1.5rem 1.25rem 2rem; }
+
+      .intro { grid-template-columns: 1fr; gap: 2.5rem; padding: 3.5rem 1.25rem; }
+      .intro-right { max-height: 300px; }
+
+      .menu { padding: 3.5rem 1.25rem; }
+      .menu-grid { grid-template-columns: 1fr; gap: 3rem; }
+
+      .contact { grid-template-columns: 1fr; gap: 3rem; padding: 3.5rem 1.25rem; }
+      .sep { padding: 1.5rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">Al Sole</div>
+    <ul class="nav-links">
+      <li><a href="#menu">La carte</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="#contact">Réserver →</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO MOSAÏQUE -->
+  <section class="hero">
+    <div class="mosaic">
+      <div class="mosaic-cell" style="background-image:url('pexels-fariphotography-905847.jpg');background-size:cover;background-position:center;"></div>
+      <div class="mosaic-cell" style="background-image:url('pexels-vanmalidate-784633.jpg');background-size:cover;background-position:center;"></div>
+      <div class="mosaic-cell" style="background-image:url('pexels-cagla-sara-789328253-34624323.jpg');background-size:cover;background-position:center;"></div>
+      <div class="mosaic-cell" style="background-image:url('ivan-torres-MQUqbmszGGM-unsplash.jpg');background-size:cover;background-position:center;"></div>
+      <div class="mosaic-cell" style="background-image:url('pexels-querida-pictur-736229889-35237081.jpg');background-size:cover;background-position:center;"></div>
+    </div>
+
+    <div class="hero-overlay"></div>
+
+    <div class="hero-text">
+      <span class="hero-eyebrow">Trattoria italienne — Cuisine artisanale</span>
+      <h1 class="hero-name">Al <em>Sole</em></h1>
+      <div class="hero-bottom">
+        <p class="hero-tagline">La cucina di una volta.<br>La table d'aujourd'hui.</p>
+        <a href="#contact" class="btn-reserve">Réserver une table</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SÉPARATEUR -->
+  <div class="sep">
+    <div class="sep-line"></div>
+    <span class="sep-text">Cuisine maison · Produits frais · Fait à la main</span>
+    <div class="sep-line"></div>
+  </div>
+
+  <!-- INTRO -->
+  <section class="intro">
+    <div class="intro-left">
+      <span class="section-label">Notre histoire</span>
+      <h2 class="intro-title">Une cuisine de<br><em>terroir,</em> transmise<br>à table.</h2>
+      <p class="intro-text">
+        Chez Al Sole, rien ne sort d'un sachet. Les pâtes sont pétries le matin, les sauces mijotent lentement, et la carte change au fil des saisons. On cuisine comme on mangeait chez la nonna — avec du temps, des mains, et des ingrédients vrais.
+      </p>
+      <p class="intro-text" style="margin-top: -0.5rem;">
+        Une table pour les amoureux, une grande pour les familles. Une seule règle : partir le ventre plein et le sourire large.
+      </p>
+    </div>
+    <div class="intro-right" style="background-image:url('pexels-carlos-andre-viana-2160317099-36770275.jpg');background-size:cover;background-position:center top;">
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section class="menu" id="menu">
+    <div class="menu-header">
+      <h2 class="menu-title">
+        Notre
+        <em>carte</em>
+      </h2>
+      <div class="menu-season">
+        Carte du printemps<br>
+        Mise à jour — Mai 2024<br>
+        <span style="color: rgba(240,232,220,0.2);">Produits de saison</span>
+      </div>
+    </div>
+
+    <div class="menu-grid">
+
+      <!-- Antipasti -->
+      <div class="menu-cat">
+        <div class="menu-cat-title">Antipasti</div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Bruschetta al pomodoro</div>
+            <div class="menu-item-desc">Tomates fraîches, basilic, huile d'olive sicilienne</div>
+          </div>
+          <div class="menu-item-price">7 €</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Burrata e prosciutto</div>
+            <div class="menu-item-desc">Burrata crémeuse, jambon cru 24 mois, roquette</div>
+          </div>
+          <div class="menu-item-price">14 €</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Carpaccio di manzo</div>
+            <div class="menu-item-desc">Bœuf tranché fin, câpres, parmesan, citron</div>
+          </div>
+          <div class="menu-item-price">13 €</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Suppli al telefono</div>
+            <div class="menu-item-desc">Croquettes de riz, mozzarella filante, tomate</div>
+          </div>
+          <div class="menu-item-price">9 €</div>
+        </div>
+      </div>
+
+      <!-- Primi -->
+      <div class="menu-cat">
+        <div class="menu-cat-title">Primi piatti</div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Tagliatelle al ragù</div>
+            <div class="menu-item-desc">Pâtes maison, ragù bolognaise mijoté 6 heures</div>
+          </div>
+          <div class="menu-item-price">17 €</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Cacio e pepe</div>
+            <div class="menu-item-desc">Tonnarelli, pecorino romano, poivre noir</div>
+          </div>
+          <div class="menu-item-price">15 €</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Gnocchi al pesto</div>
+            <div class="menu-item-desc">Gnocchis maison, pesto basilic-pignons, parmigiano</div>
+          </div>
+          <div class="menu-item-price">16 €</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Risotto ai funghi</div>
+            <div class="menu-item-desc">Carnaroli, champignons des bois, truffe d'été</div>
+          </div>
+          <div class="menu-item-price">19 €</div>
+        </div>
+      </div>
+
+      <!-- Secondi -->
+      <div class="menu-cat">
+        <div class="menu-cat-title">Secondi piatti</div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Saltimbocca alla romana</div>
+            <div class="menu-item-desc">Veau, sauge, prosciutto, beurre de citron</div>
+          </div>
+          <div class="menu-item-price">22 €</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Branzino al forno</div>
+            <div class="menu-item-desc">Bar entier, herbes fraîches, légumes de saison</div>
+          </div>
+          <div class="menu-item-price">24 €</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Melanzane alla parmigiana</div>
+            <div class="menu-item-desc">Aubergines, tomate San Marzano, fior di latte</div>
+          </div>
+          <div class="menu-item-price">15 €</div>
+        </div>
+      </div>
+
+      <!-- Dolci -->
+      <div class="menu-cat">
+        <div class="menu-cat-title">Dolci</div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Tiramisù della casa</div>
+            <div class="menu-item-desc">Recette maison, mascarpone, café serré, cacao</div>
+          </div>
+          <div class="menu-item-price">8 €</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Panna cotta al limone</div>
+            <div class="menu-item-desc">Citron d'Amalfi, coulis de fraises fraîches</div>
+          </div>
+          <div class="menu-item-price">7 €</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Cannoli siciliani</div>
+            <div class="menu-item-desc">Ricotta de brebis, pistaches de Bronte, orange confite</div>
+          </div>
+          <div class="menu-item-price">8 €</div>
+        </div>
+        <div class="menu-item">
+          <div class="menu-item-left">
+            <div class="menu-item-name">Gelato artigianale</div>
+            <div class="menu-item-desc">2 boules — parfums du jour</div>
+          </div>
+          <div class="menu-item-price">6 €</div>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="menu-note">Tous nos plats sont préparés sur place · Allergènes disponibles sur demande · Carte saisonnière</p>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="contact" id="contact">
+    <div class="contact-left">
+      <span class="section-label">Nous trouver</span>
+      <h2 class="contact-title">
+        Réservez<br>
+        <em>votre table.</em>
+      </h2>
+      <p class="contact-text">
+        On garde toujours quelques tables pour les spontanés, mais pour être sûrs d'avoir la vôtre — appelez-nous ou réservez en ligne.
+      </p>
+      <a href="tel:+33123456789" class="contact-cta">Appeler le restaurant</a>
+    </div>
+    <div class="contact-right">
+      <div class="contact-block">
+        <div class="contact-block-label">Adresse</div>
+        <div class="contact-block-value">
+          12 rue des Artisans<br>
+          75011 Paris
+        </div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-block-label">Téléphone & email</div>
+        <div class="contact-block-value">
+          <a href="tel:+33123456789">+33 1 23 45 67 89</a><br>
+          <a href="mailto:contact@alsole.fr">contact@alsole.fr</a>
+        </div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-block-label">Horaires</div>
+        <div class="contact-hours">
+          <span class="day">Lundi</span><span>Fermé</span>
+          <span class="day">Mar – Ven</span><span>12h – 14h30 · 19h – 22h30</span>
+          <span class="day">Sam – Dim</span><span>12h – 15h · 19h – 23h</span>
+        </div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-block-label">Réservation en ligne</div>
+        <div class="contact-block-value">
+          <a href="#">Disponible via TheFork →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">Al Sole</div>
+    <div class="footer-meta">Paris · © 2024 · Trattoria italienne</div>
+  </footer>
+
+</body>
+</html>

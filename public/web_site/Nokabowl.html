@@ -1,0 +1,1233 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Noka Bowl — Bowls Frais Livrés à Mons</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #FAFAF7;
+      color: #1C1108;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+    button { cursor: pointer; font-family: inherit; border: none; background: none; }
+
+    :root {
+      --bg: #FAFAF7;
+      --ink: #1C1108;
+      --accent: #2EA05A;
+      --white: #FFFFFF;
+      --border: 1px solid #1C1108;
+      --shadow: 3px 3px 0 #1C1108;
+      --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* ─── NAVIGATION ─────────────────────────────── */
+    nav {
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 200;
+      background: var(--bg);
+      border-bottom: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      height: 64px;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 800;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      transition: color 180ms;
+    }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .cart-btn {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+    }
+    .cart-btn svg { width: 22px; height: 22px; }
+    .cart-badge {
+      position: absolute;
+      top: 5px;
+      right: 3px;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'DM Mono', monospace;
+      font-size: 10px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-cta {
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      background: var(--ink);
+      color: var(--white);
+      padding: 10px 20px;
+      border: var(--border);
+      box-shadow: var(--shadow);
+      transition: transform 180ms, box-shadow 180ms;
+      display: inline-block;
+    }
+    .nav-cta:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 var(--ink);
+    }
+    .burger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      width: 44px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+    }
+    .burger span {
+      display: block;
+      width: 26px;
+      height: 3px;
+      background: var(--ink);
+      transition: transform 220ms ease, opacity 220ms ease;
+    }
+    .burger.open span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+    .burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .burger.open span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+    /* ─── MOBILE PANEL ───────────────────────────── */
+    .mobile-panel {
+      position: fixed;
+      inset: 0 -100% 0 auto;
+      width: 100%;
+      z-index: 190;
+      background: var(--bg);
+      border-left: 3px solid var(--ink);
+      display: flex;
+      flex-direction: column;
+      padding: 90px 32px 40px;
+      transition: right 240ms cubic-bezier(0.22, 1, 0.36, 1);
+      right: -100%;
+    }
+    .mobile-panel.open { right: 0; }
+    .panel-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+    }
+    .panel-links a {
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 700;
+      font-size: 2.2rem;
+      line-height: 1.15;
+      display: block;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(17,17,17,0.1);
+      transition: color 150ms;
+    }
+    .panel-links a:hover { color: var(--accent); }
+    .panel-cta {
+      display: block;
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      text-align: center;
+      background: var(--accent);
+      color: var(--white);
+      padding: 16px;
+      border: var(--border);
+      box-shadow: var(--shadow);
+      margin-top: 28px;
+    }
+
+    /* ─── HERO ───────────────────────────────────── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      overflow: hidden;
+      display: flex;
+      align-items: flex-end;
+      padding: 0 0 72px 52px;
+      margin-top: 64px;
+    }
+    .hero-photo {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.18) 45%, rgba(0,0,0,0) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .hero-text-bg {
+      position: relative;
+      z-index: 2;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 900;
+      font-size: clamp(4.5rem, 13vw, 12rem);
+      line-height: 0.88;
+      letter-spacing: -0.03em;
+      color: var(--accent);
+      text-shadow: 3px 3px 0 #1C1108, 6px 6px 0 rgba(17,17,17,0.35);
+      margin-bottom: 20px;
+    }
+    .hero-sub {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.9);
+      text-shadow: 1px 1px 6px rgba(0,0,0,0.7);
+      margin-bottom: 28px;
+      max-width: 340px;
+      line-height: 1.5;
+    }
+    .hero-btn {
+      display: inline-flex;
+      align-items: center;
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      background: var(--accent);
+      color: var(--white);
+      padding: 18px 38px;
+      min-height: 54px;
+      border: 2px solid rgba(255,255,255,0.8);
+      box-shadow: 4px 4px 0 rgba(255,255,255,0.8);
+      transition: transform 180ms, box-shadow 180ms;
+    }
+    .hero-btn:hover {
+      transform: translate(-2px,-2px);
+      box-shadow: 4px 4px 0 rgba(255,255,255,0.8);
+    }
+
+    /* ─── TRUST STRIP ────────────────────────────── */
+    .trust-strip {
+      border-bottom: var(--border);
+      padding: 0 32px;
+      overflow: hidden;
+    }
+    .trust-inner {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .trust-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 15px 24px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      border-right: 1px solid rgba(17,17,17,0.15);
+    }
+    .trust-item:last-child { border-right: none; }
+    .tdot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* ─── MARQUEE ─────────────────────────────────── */
+    .marquee-wrap {
+      overflow: hidden;
+      background: var(--ink);
+      border-top: var(--border);
+      border-bottom: var(--border);
+      padding: 13px 0;
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: scroll-left 26s linear infinite;
+    }
+    .marquee-track.rev { animation-direction: reverse; }
+    .marquee-track span {
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--white);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0 28px;
+      white-space: nowrap;
+    }
+    .marquee-track span.sep { color: var(--accent); padding: 0 4px; }
+    @keyframes scroll-left {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ─── MENU SECTION ───────────────────────────── */
+    .menu-section {
+      padding: 88px 48px;
+    }
+    .section-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 48px;
+    }
+    .s-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .s-title {
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+      line-height: 1;
+      letter-spacing: -0.025em;
+    }
+    .view-all {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.76rem;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding-bottom: 2px;
+      border-bottom: 2px solid var(--ink);
+      transition: color 150ms, border-color 150ms;
+      white-space: nowrap;
+    }
+    .view-all:hover { color: var(--accent); border-color: var(--accent); }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    .product-card {
+      border: 2px solid var(--ink);
+      background: var(--white);
+      transition: transform 220ms ease, box-shadow 220ms ease;
+      cursor: pointer;
+    }
+    .product-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 36px rgba(17,17,17,0.1);
+    }
+    .card-img {
+      aspect-ratio: 1/1;
+      overflow: hidden;
+      border-bottom: 2px solid var(--ink);
+    }
+    .card-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 320ms ease;
+    }
+    .product-card:hover .card-img img { transform: scale(1.06); }
+    .card-body { padding: 16px; }
+    .card-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #555;
+      margin-bottom: 5px;
+    }
+    .cdot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .cdot.veggie  { background: #3DBA6F; }
+    .cdot.spicy   { background: #E8432A; }
+    .cdot.chicken { background: #F5A623; }
+    .cdot.poke    { background: #5B8DEF; }
+    .card-name {
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 4px;
+    }
+    .card-desc {
+      font-size: 0.8rem;
+      color: #555;
+      line-height: 1.45;
+      margin-bottom: 14px;
+    }
+    .card-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-price {
+      font-family: 'DM Mono', monospace;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    .add-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--ink);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 180ms, box-shadow 180ms, background 180ms;
+    }
+    .add-btn:hover {
+      transform: translate(-2px,-2px);
+      box-shadow: 4px 4px 0 var(--ink);
+      background: #2fa85c;
+    }
+    .add-btn svg { width: 16px; height: 16px; }
+
+    /* ─── LIFESTYLE ──────────────────────────────── */
+    .lifestyle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: var(--border);
+      border-bottom: var(--border);
+    }
+    .lifestyle-item {
+      position: relative;
+      height: 480px;
+      overflow: hidden;
+    }
+    .lifestyle-item:first-child {
+      border-right: var(--border);
+    }
+    .lifestyle-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 500ms ease;
+    }
+    .lifestyle-item:hover img { transform: scale(1.04); }
+    .lifestyle-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 24px;
+      background: linear-gradient(transparent, rgba(17,17,17,0.65));
+      color: var(--white);
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: -0.01em;
+    }
+    @media (max-width: 768px) {
+      .lifestyle { grid-template-columns: 1fr; }
+      .lifestyle-item:first-child { border-right: none; border-bottom: var(--border); }
+      .lifestyle-item { height: 300px; }
+    }
+
+    /* ─── INGREDIENT FEATURE ─────────────────────── */
+    .feature-band {
+      position: relative;
+      border-top: var(--border);
+      border-bottom: var(--border);
+      height: 500px;
+      overflow: hidden;
+    }
+    .feature-band img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 40%;
+    }
+    .feature-card {
+      position: absolute;
+      top: 50%;
+      left: 64px;
+      transform: translateY(-50%);
+      background: var(--bg);
+      border: var(--border);
+      padding: 36px 44px;
+      max-width: 420px;
+    }
+    .feature-card .s-label { margin-bottom: 10px; }
+    .feature-card h3 {
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 800;
+      font-size: 1.9rem;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+    .feature-card p {
+      font-size: 0.9rem;
+      line-height: 1.65;
+      color: #333;
+    }
+
+    /* ─── DELIVERY ───────────────────────────────── */
+    .delivery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      gap: 0;
+      border-top: var(--border);
+      border-bottom: var(--border);
+    }
+    .delivery-left {
+      padding: 80px 56px;
+      background: var(--accent);
+    }
+    .delivery-left .s-label { color: var(--white); opacity: 0.75; }
+    .delivery-title {
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.4rem, 4vw, 3.8rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+    .delivery-body {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--ink);
+      opacity: 0.8;
+      margin-bottom: 28px;
+      max-width: 380px;
+    }
+    .zones {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .zone {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.74rem;
+      font-weight: 500;
+      background: var(--ink);
+      color: var(--white);
+      padding: 6px 13px;
+      letter-spacing: 0.04em;
+    }
+    .delivery-right {
+      height: 100%;
+      min-height: 480px;
+      overflow: hidden;
+      border-left: var(--border);
+    }
+    .delivery-right img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ─── TESTIMONIALS ───────────────────────────── */
+    .testimonials {
+      padding: 88px 48px;
+    }
+    .testi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 48px;
+    }
+    .testi-card {
+      background: var(--ink);
+      color: var(--white);
+      padding: 32px 28px;
+      border: var(--border);
+    }
+    .testi-quote {
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      line-height: 1.45;
+      margin-bottom: 24px;
+    }
+    .testi-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.75;
+    }
+    .testi-stars {
+      display: flex;
+      gap: 3px;
+      margin-bottom: 8px;
+    }
+    .testi-stars svg { width: 13px; height: 13px; fill: var(--accent); flex-shrink: 0; }
+
+    /* ─── ORDER VIA ───────────────────────────────── */
+    .order-via {
+      background: var(--ink);
+      border-top: var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .order-left {
+      padding: 80px 56px;
+      border-right: 2px solid rgba(255,255,255,0.1);
+    }
+    .order-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .order-title {
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.4rem, 4vw, 3.8rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .order-body {
+      font-size: 0.92rem;
+      color: rgba(255,255,255,0.55);
+      line-height: 1.65;
+    }
+    .order-right {
+      padding: 80px 56px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      justify-content: center;
+    }
+    .order-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--white);
+      transition: border-color 200ms, background 200ms;
+    }
+    .order-link:hover {
+      border-color: var(--accent);
+      background: rgba(61,186,111,0.07);
+    }
+    .order-link-name {
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+    .order-arrow { color: var(--accent); font-size: 1.3rem; }
+
+    /* ─── FOOTER ─────────────────────────────────── */
+    footer {
+      background: var(--bg);
+      border-top: var(--border);
+      padding: 56px 48px 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .footer-logo span { color: var(--accent); }
+    .footer-tagline {
+      font-size: 0.84rem;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .social-row { display: flex; gap: 10px; }
+    .social-btn {
+      width: 36px;
+      height: 36px;
+      border: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 500;
+      transition: background 150ms, color 150ms;
+    }
+    .social-btn:hover { background: var(--ink); color: var(--white); }
+    .footer-col-label {
+      font-family: 'Playfair Display', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .footer-col ul li a {
+      font-size: 0.84rem;
+      color: #555;
+      transition: color 150ms;
+    }
+    .footer-col ul li a:hover { color: var(--ink); }
+    .footer-bottom {
+      border-top: 1px solid rgba(17,17,17,0.12);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: #999;
+    }
+
+    /* ─── TYPOGRAPHIE COULEUR ───────────────────── */
+    .hl {
+      color: var(--accent);
+      font-style: italic;
+    }
+    .hl-ink {
+      color: var(--ink);
+    }
+    /* Titres de section sur fond sombre : accent en vert */
+    .order-title .hl,
+    .delivery-title .hl {
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    /* ─── GRAIN UI ──────────────────────────────── */
+
+    /* Fond crème — grain directement en background sur les zones sans photo */
+    nav,
+    .trust-strip,
+    .card-body,
+    .feature-card,
+    .testimonials,
+    footer {
+      background-image: var(--noise);
+      background-repeat: repeat;
+      background-size: 250px 250px;
+    }
+
+    /* Isolation totale des conteneurs photo */
+    .card-img { background-color: #EDE8DF; }
+
+    /* Blocs colorés/sombres — grain via ::after pour ne pas écraser leur bg-color */
+    .marquee-wrap::after,
+    .delivery-left::after,
+    .testi-card::after,
+    .order-via::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: var(--noise);
+      background-repeat: repeat;
+      background-size: 250px 250px;
+      opacity: 0.07;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .marquee-wrap,
+    .delivery-left,
+    .testi-card,
+    .order-via { position: relative; }
+
+    /* Boutons CTA */
+    .nav-cta::after,
+    .hero-btn::after,
+    .add-btn::after,
+    .panel-cta::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: var(--noise);
+      background-repeat: repeat;
+      background-size: 150px 150px;
+      opacity: 0.08;
+      pointer-events: none;
+      border-radius: inherit;
+    }
+    .nav-cta, .hero-btn, .add-btn, .panel-cta { position: relative; overflow: hidden; }
+
+    /* Lifestyle : overlay couleur accent uniquement, pas de grain sur les photos */
+    .lifestyle-item::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(61,186,111,0.18) 0%, rgba(17,17,17,0.42) 100%);
+      pointer-events: none;
+      z-index: 2;
+    }
+    .lifestyle-caption { z-index: 3; }
+
+    /* ─── RESPONSIVE ─────────────────────────────── */
+    @media (max-width: 1100px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .delivery { grid-template-columns: 1fr; }
+      .delivery-right { min-height: 300px; border-left: none; border-top: var(--border); }
+      .order-via { grid-template-columns: 1fr; }
+      .order-left { border-right: none; border-bottom: 2px solid rgba(255,255,255,0.1); }
+      .testi-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links, .nav-cta { display: none; }
+      .burger { display: flex; }
+      .hero { padding: 0 0 52px 24px; }
+      .hero-title { font-size: clamp(3.5rem, 18vw, 6rem); }
+      .menu-section { padding: 64px 20px; }
+      .section-head { flex-direction: column; align-items: flex-start; gap: 14px; }
+      .product-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .feature-band { height: 340px; }
+      .feature-card { left: 20px; right: 20px; max-width: none; padding: 24px 28px; }
+      .delivery-left { padding: 56px 28px; }
+      .testimonials { padding: 64px 20px; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .order-left, .order-right { padding: 56px 28px; }
+      footer { padding: 48px 20px 24px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+      .trust-item { padding: 12px 14px; }
+    }
+    @media (max-width: 600px) {
+      .product-grid { grid-template-columns: 1fr; gap: 14px; }
+      .card-name { font-size: 1rem; }
+    }
+    @media (max-width: 480px) {
+      .hero-title { font-size: clamp(3rem, 20vw, 4.5rem); }
+      .trust-item:nth-child(n+4) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAVIGATION ══════════════════════════════════════════ -->
+<nav>
+  <a href="#" class="nav-logo">NOKA<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#commander">Commander</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="cart-btn" id="cartBtn" aria-label="Mon panier">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <path d="M16 10a4 4 0 01-8 0"/>
+      </svg>
+      <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+    <a href="#commander" class="nav-cta">Commander</a>
+    <button class="burger" id="burgerBtn" aria-label="Ouvrir le menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- ═══ MOBILE PANEL ════════════════════════════════════════ -->
+<div class="mobile-panel" id="mobilePanel" aria-hidden="true">
+  <ul class="panel-links">
+    <li><a href="#menu"      onclick="closePanel()">Menu</a></li>
+    <li><a href="#livraison" onclick="closePanel()">Livraison</a></li>
+    <li><a href="#avis"      onclick="closePanel()">Avis</a></li>
+    <li><a href="#commander" onclick="closePanel()">Commander</a></li>
+  </ul>
+  <a href="#commander" class="panel-cta" onclick="closePanel()">Commander maintenant →</a>
+</div>
+
+<!-- ═══ HERO ════════════════════════════════════════════════ -->
+<section class="hero" id="top">
+  <img
+    src="../poke/jk1.png"
+    alt="Bowl frais Noka Bowl"
+    class="hero-photo"
+  >
+  <div class="hero-text-bg">
+    <h1 class="hero-title">NOKA<br>BOWL</h1>
+    <p class="hero-sub">Bowls frais livrés à Mons.<br>Sain sans renoncer au plaisir.</p>
+    <a href="#menu" class="hero-btn">Voir le menu →</a>
+  </div>
+</section>
+
+<!-- ═══ TRUST STRIP ═════════════════════════════════════════ -->
+<div class="trust-strip">
+  <div class="trust-inner">
+    <div class="trust-item"><span class="tdot"></span>Livraison en 30 min</div>
+    <div class="trust-item"><span class="tdot"></span>Ingrédients frais du jour</div>
+    <div class="trust-item"><span class="tdot"></span>Commande sécurisée</div>
+    <div class="trust-item"><span class="tdot"></span>Emballages éco-responsables</div>
+    <div class="trust-item"><span class="tdot"></span>Livraison offerte dès 25 €</div>
+  </div>
+</div>
+
+<!-- ═══ MARQUEE 1 ═══════════════════════════════════════════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>BOWLS FRAIS</span><span class="sep">·</span>
+    <span>LIVRÉS À MONS</span><span class="sep">·</span>
+    <span>SAIN SANS COMPROMIS</span><span class="sep">·</span>
+    <span>POKE</span><span class="sep">·</span>
+    <span>CHAUD</span><span class="sep">·</span>
+    <span>VEGGIE</span><span class="sep">·</span>
+    <span>BOWLS FRAIS</span><span class="sep">·</span>
+    <span>LIVRÉS À MONS</span><span class="sep">·</span>
+    <span>SAIN SANS COMPROMIS</span><span class="sep">·</span>
+    <span>POKE</span><span class="sep">·</span>
+    <span>CHAUD</span><span class="sep">·</span>
+    <span>VEGGIE</span><span class="sep">·</span>
+  </div>
+</div>
+
+<!-- ═══ MENU ════════════════════════════════════════════════ -->
+<section class="menu-section" id="menu">
+  <div class="section-head">
+    <div>
+      <p class="s-label">Notre carte</p>
+      <h2 class="s-title">Les <span class="hl">Bowls</span></h2>
+    </div>
+    <a href="#" class="view-all">Voir tout le menu →</a>
+  </div>
+
+  <div class="product-grid">
+
+    <!-- Le Vivant -->
+    <div class="product-card">
+      <div class="card-img">
+        <img src="../poke/vivant.jpg" alt="Le Vivant">
+      </div>
+      <div class="card-body">
+        <div class="card-label"><span class="cdot veggie"></span>Végétarien</div>
+        <div class="card-name">Le Vivant</div>
+        <div class="card-desc">Avocat · Edamame · Patate douce · Microgreens · Tahini</div>
+        <div class="card-foot">
+          <span class="card-price">12,90 €</span>
+          <button class="add-btn" onclick="addToCart(event)" aria-label="Ajouter au panier">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Le Brasero -->
+    <div class="product-card">
+      <div class="card-img">
+        <img src="../poke/brasero.jpg" alt="Le Brasero">
+      </div>
+      <div class="card-body">
+        <div class="card-label"><span class="cdot spicy"></span>Épicé</div>
+        <div class="card-name">Le Brasero</div>
+        <div class="card-desc">Tofu grillé · Maïs · Chou rouge · Tomate cerise · Edamame</div>
+        <div class="card-foot">
+          <span class="card-price">13,50 €</span>
+          <button class="add-btn" onclick="addToCart(event)" aria-label="Ajouter au panier">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- L'Éclatant -->
+    <div class="product-card">
+      <div class="card-img">
+        <img src="../poke/fgfg.png" alt="L'Éclatant">
+      </div>
+      <div class="card-body">
+        <div class="card-label"><span class="cdot chicken"></span>Poulet</div>
+        <div class="card-name">L'Éclatant</div>
+        <div class="card-desc">Poulet grillé · Pois chiches · Concombre · Avocat · Citron</div>
+        <div class="card-foot">
+          <span class="card-price">13,90 €</span>
+          <button class="add-btn" onclick="addToCart(event)" aria-label="Ajouter au panier">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- L'Immergé -->
+    <div class="product-card">
+      <div class="card-img">
+        <img src="../poke/ggggh.png" alt="L'Immergé">
+      </div>
+      <div class="card-body">
+        <div class="card-label"><span class="cdot poke"></span>Poke</div>
+        <div class="card-name">L'Immergé</div>
+        <div class="card-desc">Saumon mariné · Avocat · Edamame · Riz vinaigré · Sésame</div>
+        <div class="card-foot">
+          <span class="card-price">14,90 €</span>
+          <button class="add-btn" onclick="addToCart(event)" aria-label="Ajouter au panier">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ MARQUEE 2 ═══════════════════════════════════════════ -->
+<div class="marquee-wrap">
+  <div class="marquee-track rev">
+    <span>FRAIS DU JOUR</span><span class="sep">·</span>
+    <span>FAIT MAISON</span><span class="sep">·</span>
+    <span>0 COMPROMIS</span><span class="sep">·</span>
+    <span>MONS CENTRE</span><span class="sep">·</span>
+    <span>BON POUR TOI</span><span class="sep">·</span>
+    <span>BON TOUT COURT</span><span class="sep">·</span>
+    <span>FRAIS DU JOUR</span><span class="sep">·</span>
+    <span>FAIT MAISON</span><span class="sep">·</span>
+    <span>0 COMPROMIS</span><span class="sep">·</span>
+    <span>MONS CENTRE</span><span class="sep">·</span>
+    <span>BON POUR TOI</span><span class="sep">·</span>
+    <span>BON TOUT COURT</span><span class="sep">·</span>
+  </div>
+</div>
+
+<!-- ═══ LIFESTYLE ═══════════════════════════════════════════ -->
+<div class="lifestyle">
+  <div class="lifestyle-item">
+    <img src="../poke/test2.png" alt="Moment bowl Noka">
+    <div class="lifestyle-caption">Pause bowl, plaisir garanti.</div>
+  </div>
+  <div class="lifestyle-item">
+    <img src="../poke/istockphoto-1427845917-612x612.jpg.png" alt="Déguster un bowl Noka">
+    <div class="lifestyle-caption">Sain, frais, livré chez toi.</div>
+  </div>
+</div>
+
+<!-- ═══ INGREDIENT FEATURE ══════════════════════════════════ -->
+<div class="feature-band">
+  <img src="../poke/ingredients.jpg" alt="Ingrédients frais sélectionnés chaque matin">
+  <div class="feature-card">
+    <p class="s-label">Notre philosophie</p>
+    <h3>Sain sans<br>renoncer<br>au <span class="hl">plaisir.</span></h3>
+    <p>Des ingrédients sélectionnés chaque matin au marché. Pas de conservateurs, pas de compromis sur le goût. Juste du bon, livré vite.</p>
+  </div>
+</div>
+
+<!-- ═══ DELIVERY ════════════════════════════════════════════ -->
+<section class="delivery" id="livraison">
+  <div class="delivery-left">
+    <p class="s-label">Zone de livraison</p>
+    <h2 class="delivery-title">On livre partout<br>à <span class="hl">Mons.</span></h2>
+    <p class="delivery-body">Livraison à domicile ou retrait sur place au restaurant. Commandez en ligne ou via Deliveroo — on s'occupe du reste en moins de 30 minutes.</p>
+    <div class="zones">
+      <span class="zone">Mons Centre</span>
+      <span class="zone">Jemappes</span>
+      <span class="zone">Cuesmes</span>
+      <span class="zone">Ghlin</span>
+      <span class="zone">Saint-Denis</span>
+      <span class="zone">Nimy</span>
+      <span class="zone">Flénu</span>
+      <span class="zone">Ciply</span>
+    </div>
+  </div>
+  <div class="delivery-right">
+    <img src="../poke/livreur.jpg" alt="Livreur Noka Bowl à Mons">
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ════════════════════════════════════════ -->
+<section class="testimonials" id="avis">
+  <div>
+    <p class="s-label">Ce qu'ils en disent</p>
+    <h2 class="s-title">Ils ont <span class="hl">craqué.</span></h2>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <p class="testi-quote">"Le meilleur bowl de Mons, sans hésitation. Frais, généreux, livré en 25 minutes. Je commande deux fois par semaine."</p>
+      <div class="testi-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><p class="testi-meta">Camille D. — Mons Centre</p>
+    </div>
+    <div class="testi-card">
+      <p class="testi-quote">"Enfin un endroit qui prouve qu'on peut manger sain et se régaler. L'Immergé saumon est absolument incroyable."</p>
+      <div class="testi-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><p class="testi-meta">Thomas V. — Jemappes</p>
+    </div>
+    <div class="testi-card">
+      <p class="testi-quote">"Je cherchais un repas post-training rapide et nourrissant. Noka Bowl c'est la solution. Emballage éco, goût parfait."</p>
+      <div class="testi-stars"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><p class="testi-meta">Sarah M. — Nimy</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ORDER VIA ════════════════════════════════════════════ -->
+<section class="order-via" id="commander">
+  <div class="order-left">
+    <p class="order-label">Commander</p>
+    <h2 class="order-title">À votre <span class="hl">façon.</span></h2>
+    <p class="order-body">Commandez directement depuis notre site ou via votre plateforme préférée. Livraison à domicile ou retrait sur place — vous choisissez.</p>
+  </div>
+  <div class="order-right">
+    <a href="#" class="order-link">
+      <span class="order-link-name">Commander en ligne</span>
+      <span class="order-arrow">→</span>
+    </a>
+    <a href="#" class="order-link">
+      <span class="order-link-name">Deliveroo</span>
+      <span class="order-arrow">→</span>
+    </a>
+    <a href="#" class="order-link">
+      <span class="order-link-name">Retrait sur place</span>
+      <span class="order-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-logo">NOKA<span>.</span></div>
+      <p class="footer-tagline">Bowls frais livrés à Mons.<br>Sain, gourmand, rapide.</p>
+      <div class="social-row">
+        <a href="#" class="social-btn" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+        <a href="#" class="social-btn" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg></a>
+        <a href="#" class="social-btn" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.32 6.32 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <p class="footer-col-label">Menu</p>
+      <ul>
+        <li><a href="#">Le Vivant</a></li>
+        <li><a href="#">Le Brasero</a></li>
+        <li><a href="#">L'Éclatant</a></li>
+        <li><a href="#">L'Immergé</a></li>
+        <li><a href="#">Voir tout</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <p class="footer-col-label">Infos</p>
+      <ul>
+        <li><a href="#">À propos</a></li>
+        <li><a href="#">Zone de livraison</a></li>
+        <li><a href="#">Allergènes</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <p class="footer-col-label">Horaires</p>
+      <ul>
+        <li><a href="#">Lun–Ven · 11h–22h</a></li>
+        <li><a href="#">Samedi · 11h–23h</a></li>
+        <li><a href="#">Dimanche · 12h–21h</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 Noka Bowl — Mons, Belgique</span>
+    <span class="footer-copy">Politique de confidentialité · CGV</span>
+  </div>
+</footer>
+
+<script>
+  // ── Burger / Panel
+  const burger = document.getElementById('burgerBtn');
+  const panel  = document.getElementById('mobilePanel');
+
+  burger.addEventListener('click', () => {
+    const isOpen = panel.classList.toggle('open');
+    burger.classList.toggle('open');
+    panel.setAttribute('aria-hidden', String(!isOpen));
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  function closePanel() {
+    panel.classList.remove('open');
+    burger.classList.remove('open');
+    panel.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  // ── Cart
+  let cartCount = 0;
+  const badge = document.getElementById('cartBadge');
+
+  function addToCart(e) {
+    e.stopPropagation();
+    cartCount++;
+    badge.textContent = cartCount;
+    badge.style.display = 'flex';
+  }
+</script>
+
+</body>
+</html>
+
+

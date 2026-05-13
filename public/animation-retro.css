@@ -1,0 +1,441 @@
+/* ════════════════════════════════════════════════════════
+   ANIMATION.HTML — RETRO/FUN ATMOSPHERE OVERLAY
+   Adds Win98 desktop chrome on top of the teal chromakey
+   without touching the lottie face or video windows.
+   ════════════════════════════════════════════════════════ */
+
+/* ── SCANLINES — subtle CRT effect over the whole stage ── */
+#stage::before { z-index: 1; }
+.scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0px,
+    rgba(0,0,0,0) 2px,
+    rgba(0,0,0,0.06) 2px,
+    rgba(0,0,0,0.06) 3px
+  );
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+
+/* Slight horizontal sweep — like a moving CRT artifact */
+.crt-sweep {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255,255,255,0.04) 50%,
+    transparent 100%
+  );
+  background-size: 100% 220px;
+  animation: crtSweep 8s linear infinite;
+  mix-blend-mode: screen;
+  opacity: 0.6;
+}
+@keyframes crtSweep {
+  0%   { background-position: 0 -220px; }
+  100% { background-position: 0 100vh; }
+}
+
+/* ── DESKTOP ICONS — top left corner ── */
+.desktop-icons {
+  position: absolute;
+  top: 84px;
+  left: 24px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  pointer-events: none;
+  user-select: none;
+}
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 76px;
+  gap: 4px;
+  pointer-events: auto;
+  cursor: pointer;
+  padding: 4px;
+}
+.desktop-icon-img {
+  width: 38px; height: 38px;
+  image-rendering: pixelated;
+  filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.4));
+}
+.desktop-icon-label {
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  color: white;
+  text-shadow: 1px 1px 0 #000, 1px 1px 2px rgba(0,0,0,0.8);
+  text-align: center;
+  line-height: 1.1;
+  padding: 1px 3px;
+  border: 1px dotted transparent;
+}
+.desktop-icon:hover .desktop-icon-label {
+  background: rgba(0,0,128,0.7);
+  border: 1px dotted rgba(255,255,255,0.6);
+}
+.desktop-icon:active .desktop-icon-img { transform: translate(1px, 1px); }
+
+/* ── STICKY POST-IT — bottom-right (above taskbar) ── */
+.post-it {
+  position: absolute;
+  bottom: 64px;
+  right: 32px;
+  z-index: 50;
+  width: 200px;
+  padding: 16px 16px 14px;
+  background: #FFE066;
+  color: #2A2410;
+  transform: rotate(3deg);
+  box-shadow:
+    1px 1px 0 rgba(0,0,0,0.05),
+    6px 8px 18px rgba(0,0,0,0.35);
+  font-family: 'Caveat', 'Comic Sans MS', cursive;
+  pointer-events: none;
+  transition: transform 0.3s;
+}
+.post-it::before {
+  /* tape strip */
+  content: '';
+  position: absolute;
+  top: -10px; left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
+  width: 70px; height: 18px;
+  background: rgba(240,237,230,0.55);
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.08);
+}
+.post-it-title {
+  font-family: 'Tahoma', Arial, sans-serif;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.55;
+  margin-bottom: 6px;
+  font-weight: bold;
+}
+.post-it-body {
+  font-size: 19px;
+  line-height: 1.2;
+  font-weight: 700;
+}
+.post-it-foot {
+  margin-top: 10px;
+  font-family: 'Tahoma', Arial, sans-serif;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  color: rgba(42,36,16,0.6);
+  font-style: italic;
+}
+
+/* ── TASKBAR ── */
+.taskbar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 32px;
+  background: #C0C0C0;
+  border-top: 2px solid #DFDFDF;
+  display: flex;
+  align-items: center;
+  padding: 2px 2px 2px 2px;
+  z-index: 600;
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  gap: 4px;
+  box-shadow: 0 -1px 0 #404040 inset;
+}
+.tb-start {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px 3px 6px;
+  background: #C0C0C0;
+  border-top: 1px solid #DFDFDF;
+  border-left: 1px solid #DFDFDF;
+  border-right: 1px solid #404040;
+  border-bottom: 1px solid #404040;
+  cursor: pointer;
+  font-weight: bold;
+  color: #000;
+  height: 24px;
+}
+.tb-start:active,
+.tb-start.active {
+  border-top: 1px solid #404040;
+  border-left: 1px solid #404040;
+  border-right: 1px solid #DFDFDF;
+  border-bottom: 1px solid #DFDFDF;
+}
+.tb-start-flag {
+  display: inline-block;
+  width: 16px; height: 16px;
+  background:
+    linear-gradient(45deg, #FF0000 50%, transparent 50%) 0 0 / 8px 8px no-repeat,
+    linear-gradient(45deg, transparent 50%, #00FF00 50%) 8px 0 / 8px 8px no-repeat,
+    linear-gradient(45deg, #0000FF 50%, transparent 50%) 0 8px / 8px 8px no-repeat,
+    linear-gradient(45deg, transparent 50%, #FFFF00 50%) 8px 8px / 8px 8px no-repeat;
+  image-rendering: pixelated;
+}
+
+.tb-divider {
+  width: 1px;
+  height: 22px;
+  background: #808080;
+  border-right: 1px solid #DFDFDF;
+  margin: 0 3px;
+}
+.tb-tasks {
+  display: flex;
+  gap: 3px;
+  flex: 1;
+  overflow: hidden;
+}
+.tb-task {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  height: 24px;
+  background: #C0C0C0;
+  border-top: 1px solid #DFDFDF;
+  border-left: 1px solid #DFDFDF;
+  border-right: 1px solid #404040;
+  border-bottom: 1px solid #404040;
+  font-size: 11px;
+  color: #000;
+  max-width: 200px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.tb-task.minimized {
+  border-top: 1px solid #404040;
+  border-left: 1px solid #404040;
+  border-right: 1px solid #DFDFDF;
+  border-bottom: 1px solid #DFDFDF;
+  color: rgba(0,0,0,0.55);
+}
+.tb-task-icon { font-size: 10px; }
+.tb-tray {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  height: 24px;
+  border-top: 1px solid #404040;
+  border-left: 1px solid #404040;
+  border-right: 1px solid #DFDFDF;
+  border-bottom: 1px solid #DFDFDF;
+  background: #C0C0C0;
+  color: #000;
+}
+.tb-clock {
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: normal;
+  letter-spacing: 0;
+  min-width: 46px;
+  text-align: center;
+}
+.tb-tray-icon {
+  font-size: 12px;
+  line-height: 1;
+}
+
+/* Start menu */
+.start-menu {
+  position: fixed;
+  bottom: 32px;
+  left: 2px;
+  width: 200px;
+  background: #C0C0C0;
+  border-top: 2px solid #DFDFDF;
+  border-left: 2px solid #DFDFDF;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+  z-index: 700;
+  display: none;
+  font-family: 'Tahoma', Arial, sans-serif;
+  font-size: 12px;
+  color: #000;
+}
+.start-menu.open { display: block; }
+.start-menu-strip {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 22px;
+  background: linear-gradient(to bottom, #000080, #1084D0);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 12px;
+}
+.start-menu-strip span {
+  font-family: 'Tahoma', Arial, sans-serif;
+  font-weight: bold;
+  font-size: 13px;
+  color: white;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+.start-menu-list {
+  padding: 4px 4px 4px 28px;
+  display: flex;
+  flex-direction: column;
+}
+.start-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  cursor: pointer;
+  color: #000;
+  text-decoration: none;
+}
+.start-menu-item:hover {
+  background: #000080;
+  color: white;
+}
+.start-menu-item .ico { font-size: 14px; width: 18px; text-align: center; }
+.start-menu-sep {
+  height: 1px;
+  background: #808080;
+  border-bottom: 1px solid #DFDFDF;
+  margin: 4px 4px 4px 28px;
+}
+
+/* ── REC INDICATOR (top-right) ── */
+.rec-indicator {
+  position: absolute;
+  top: 84px;
+  right: 24px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.6);
+  letter-spacing: 0.04em;
+  user-select: none;
+}
+.rec-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: #E32636;
+  box-shadow: 0 0 8px rgba(227,38,54,0.8);
+  animation: recBlink 1.4s ease-in-out infinite;
+}
+@keyframes recBlink {
+  0%, 60% { opacity: 1; }
+  70%, 100% { opacity: 0.2; }
+}
+.rec-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.rec-meta-bottom {
+  font-size: 10px;
+  font-weight: normal;
+  opacity: 0.7;
+}
+
+/* ── CHROMAKEY MARKER — bottom-left text "BG: #008080 — KEYED OUT IN POST" ── */
+.chromakey-marker {
+  position: absolute;
+  bottom: 48px;
+  left: 24px;
+  z-index: 5;
+  font-family: 'Tahoma', 'MS Sans Serif', Arial, sans-serif;
+  font-size: 10px;
+  color: rgba(255,255,255,0.55);
+  letter-spacing: 0.06em;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+  line-height: 1.5;
+  pointer-events: none;
+  user-select: none;
+}
+.chromakey-marker .ck-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.chromakey-marker .ck-swatch {
+  display: inline-block;
+  width: 11px; height: 11px;
+  background: #008080;
+  border: 1px solid rgba(255,255,255,0.6);
+}
+
+/* ── PUSH STAGE UP TO ACCOUNT FOR TASKBAR ── */
+#stage { height: calc(100vh - 32px) !important; }
+
+/* ── FOOTER — sits below taskbar in flow, hide on small screens since taskbar fixed ── */
+footer { padding-bottom: 56px; }
+
+/* ── ENHANCE WINDOWS — slight CRT shadow flicker ── */
+.win98 {
+  filter: drop-shadow(0 0 0 transparent);
+}
+.win98::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0px,
+    rgba(0,0,0,0) 1px,
+    rgba(255,255,255,0.03) 1px,
+    rgba(255,255,255,0.03) 2px
+  );
+  mix-blend-mode: screen;
+}
+
+/* ── FACE — add halo + Lottie nameplate ── */
+#face-lottie {
+  filter: drop-shadow(0 0 60px rgba(145,74,206,0.45)) drop-shadow(0 0 8px rgba(0,0,0,0.3));
+}
+.face-badge {
+  background: rgba(13,10,15,0.55);
+  backdrop-filter: blur(6px);
+  border-radius: 0 !important;
+}
+
+/* Subtle stage corner brackets — like a viewfinder */
+.viewfinder { position: absolute; inset: 56px 24px 56px 24px; pointer-events: none; z-index: 4; }
+.viewfinder span {
+  position: absolute;
+  width: 28px; height: 28px;
+  border: 2px solid rgba(255,255,255,0.5);
+}
+.viewfinder span.tl { top: 0; left: 0; border-right: none; border-bottom: none; }
+.viewfinder span.tr { top: 0; right: 0; border-left: none; border-bottom: none; }
+.viewfinder span.bl { bottom: 0; left: 0; border-right: none; border-top: none; }
+.viewfinder span.br { bottom: 0; right: 0; border-left: none; border-top: none; }
+
+/* ── RESPONSIVE — hide chrome on mobile ── */
+@media (max-width: 900px) {
+  .desktop-icons, .post-it, .viewfinder, .rec-indicator, .chromakey-marker { display: none; }
+  .taskbar { height: 28px; }
+  .tb-task { display: none; }
+  .tb-task:first-child { display: flex; }
+  #stage { height: calc(100vh - 28px) !important; }
+}
