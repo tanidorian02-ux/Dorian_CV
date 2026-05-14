@@ -279,9 +279,9 @@ export default function Animation() {
         <h2 className="mobile-videos-title">Motion<br /><span className="violet">Design.</span></h2>
         <div className="mobile-videos-grid">
           {wins.map(w => (
-            <div key={`m-${w.id}`} className={`mobile-video-card${w.vertical ? ' vertical' : ''}`}>
+            <div key={`m-${w.id}`} className={`mobile-video-card${w.vertical ? ' vertical' : ''}`} onClick={() => openModal(w.src, w.title)} style={{cursor:'pointer'}}>
               <video src={w.src} autoPlay muted loop playsInline preload="none"></video>
-              <span className="mobile-video-label">{w.label}</span>
+              <span className="mobile-video-label">{w.label} ▶</span>
             </div>
           ))}
         </div>
