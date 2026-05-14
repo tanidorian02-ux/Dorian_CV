@@ -5,21 +5,6 @@ import Image from 'next/image'
 
 export default function Web() {
   useEffect(() => {
-    // Cursor
-    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
-    let cursor: HTMLDivElement | null = null
-    if (!isTouchDevice) {
-      cursor = document.createElement('div')
-      cursor.className = 'cursor'
-      document.body.appendChild(cursor)
-      document.addEventListener('mousemove', (e: MouseEvent) => {
-        if (cursor) { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px' }
-      })
-      document.querySelectorAll('a, button, .creative-card').forEach(el => {
-        el.addEventListener('mouseenter', () => cursor?.classList.add('cursor-hover'))
-        el.addEventListener('mouseleave', () => cursor?.classList.remove('cursor-hover'))
-      })
-    }
     // Scroll reveal
     const reveals = document.querySelectorAll<HTMLElement>('.reveal')
     reveals.forEach(el => { el.style.opacity = '0'; el.style.transform = 'translateY(20px)'; el.style.transition = 'opacity 0.7s ease, transform 0.7s ease' })
@@ -31,7 +16,7 @@ export default function Web() {
     const nav = document.querySelector('nav')
     const onScroll = () => nav?.classList.toggle('scrolled', window.scrollY > 50)
     window.addEventListener('scroll', onScroll, { passive: true })
-    return () => { cursor?.remove(); window.removeEventListener('scroll', onScroll) }
+    return () => { window.removeEventListener('scroll', onScroll) }
   }, [])
 
   return (

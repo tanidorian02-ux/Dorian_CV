@@ -4,27 +4,6 @@ import Link from 'next/link'
 
 export default function Home() {
   useEffect(() => {
-    // Custom cursor
-    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
-    let cursor: HTMLDivElement | null = null
-    let ring: HTMLDivElement | null = null
-    if (!isTouchDevice) {
-      cursor = document.createElement('div')
-      cursor.className = 'cursor'
-      document.body.appendChild(cursor)
-      ring = document.createElement('div')
-      ring.className = 'cursor-ring'
-      document.body.appendChild(ring)
-      const onMove = (e: MouseEvent) => {
-        if (cursor) { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px' }
-        if (ring) { ring.style.left = e.clientX + 'px'; ring.style.top = e.clientY + 'px' }
-      }
-      document.addEventListener('mousemove', onMove)
-      document.querySelectorAll('a, button, .portal, .service-item').forEach(el => {
-        el.addEventListener('mouseenter', () => cursor?.classList.add('cursor-hover'))
-        el.addEventListener('mouseleave', () => cursor?.classList.remove('cursor-hover'))
-      })
-    }
 
     // Marquee pause
     const track = document.querySelector('.marquee-track') as HTMLElement | null
@@ -66,7 +45,6 @@ export default function Home() {
     window.addEventListener('scroll', onScroll, { passive: true })
 
     return () => {
-      cursor?.remove(); ring?.remove()
       window.removeEventListener('scroll', onScroll)
     }
   }, [])
