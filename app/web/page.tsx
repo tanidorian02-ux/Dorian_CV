@@ -122,9 +122,9 @@ export default function Web() {
         <div className="creative-grid">
           {[
             { href:'/web_site/Nokabowl.html', cls:'', preview:'preview-noka', badge:'Brand · Food', title:'NOKA', type:'Food & Delivery', name:'Noka Bowl', desc:"Landing page fictive pour une marque de bowls frais.", tags:['Neobrutalism','Green'], disabled:false },
-            { href:'/web_site/flowy-homepage.html', cls:'', preview:'preview-flowly', badge:'SaaS · B2B', title:'FLOWLY', type:'SaaS · Automatisation', name:'Flowly', desc:"Homepage fictive pour un outil SaaS d'automatisation.", tags:['SaaS','Blue'], disabled:false },
-            { href:'/web_site/mindsync-homepage.html', cls:'', preview:'preview-mindsync', badge:'IA · Dark UI', title:'MIND', type:'IA · Génération', name:'MindSync', desc:'Landing dark mode pour un outil IA de contenu.', tags:['Dark Mode','IA'], disabled:false },
             { href:'/alsole/alsole.html', cls:'', preview:'preview-alsole', badge:'Editorial', title:'AL SOLE', type:'Restaurant · Trattoria', name:'Al Sole', desc:'Landing fictive pour une trattoria italienne.', tags:['Editorial','Food'], disabled:false },
+            { href:'/web_site/mindsync-homepage.html', cls:'', preview:'preview-mindsync', badge:'IA · Dark UI', title:'MIND', type:'IA · Génération', name:'MindSync', desc:'Landing dark mode pour un outil IA de contenu.', tags:['Dark Mode','IA'], disabled:false },
+            { href:'/web_site/flowy-homepage.html', cls:'', preview:'preview-flowly', badge:'SaaS · B2B', title:'FLOWLY', type:'SaaS · Automatisation', name:'Flowly', desc:"Homepage fictive pour un outil SaaS d'automatisation.", tags:['SaaS','Blue'], disabled:false },
             { href:'#', cls:'', preview:'preview-soon', badge:'À venir', title:'+', type:'Nouveau projet', name:'En brief', desc:'Nouveaux projets en cours de brief — à venir prochainement.', tags:['2025'], disabled:true },
           ].map((c,i) => {
             const cls = `creative-card ${c.cls} ${c.disabled?'disabled':''}`.trim()
