@@ -1,6 +1,7 @@
 'use client'
 import { useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Web() {
   useEffect(() => {
@@ -82,8 +83,7 @@ export default function Web() {
               <span className="url">camille-charleroi.vercel.app</span>
             </div>
             <div className="img-wrap">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/picture/camille-preview.png" alt="Camille Charleroi" />
+              <Image src="/picture/camille-preview.png" alt="Camille Charleroi" width={800} height={500} />
               <div className="project-feature-visual-overlay"></div>
             </div>
           </div>
@@ -108,8 +108,7 @@ export default function Web() {
               <span className="url">next-business.vercel.app</span>
             </div>
             <div className="img-wrap">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/picture/dd2-preview-1.png" alt="Next Business" />
+              <Image src="/picture/dd2-preview-1.png" alt="Next Business" width={800} height={500} />
               <div className="project-feature-visual-overlay"></div>
             </div>
           </div>
@@ -162,7 +161,7 @@ export default function Web() {
         <div className="contact-right">
           <a href="mailto:tani.dorian02@gmail.com" className="contact-email"><span>tani.dorian02@gmail.com</span><span>→</span></a>
           <div className="contact-links">
-            <a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="contact-link">GitHub</a>
+            <a href="https://github.com/tanidorian02-ux" target="_blank" rel="noopener noreferrer" className="contact-link">GitHub</a>
             <a href="https://www.linkedin.com/in/dorian-tani/" target="_blank" rel="noopener noreferrer" className="contact-link">LinkedIn</a>
             <a href="tel:+32484943651" className="contact-link">+32 484 943 651</a>
           </div>

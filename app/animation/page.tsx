@@ -232,7 +232,7 @@ export default function Animation() {
               </div>
             </div>
             <div className="win-content">
-              <video src={w.src} autoPlay muted loop playsInline></video>
+              <video src={w.src} autoPlay muted loop playsInline preload="none"></video>
             </div>
             <button className="win-open-btn" onClick={() => openModal(w.src, w.title)}>▶ Ouvrir en plein écran</button>
           </div>
@@ -280,7 +280,7 @@ export default function Animation() {
         <div className="mobile-videos-grid">
           {wins.map(w => (
             <div key={`m-${w.id}`} className={`mobile-video-card${w.vertical ? ' vertical' : ''}`}>
-              <video src={w.src} autoPlay muted loop playsInline></video>
+              <video src={w.src} autoPlay muted loop playsInline preload="none"></video>
               <span className="mobile-video-label">{w.label}</span>
             </div>
           ))}

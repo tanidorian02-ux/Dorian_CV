@@ -11,6 +11,32 @@
   --font-display: var(--font-syne), 'Syne', sans-serif;
   --font-mono: var(--font-dm-mono), 'DM Mono', monospace;
   --font-body: var(--font-inter), 'Inter', sans-serif;
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0D0A0F;
+    --ink: #F0EDE6;
+    --violet: #9D7FFF;
+    --violet-light: #C4B5FD;
+    --muted: #7A7570;
+    --border: rgba(240,237,230,0.10);
+  }
+  .cursor { mix-blend-mode: screen; }
+  .hero-sticker { background: #F5A623; color: #0D0A0F; }
+  .nav-cta { background: var(--ink); color: var(--bg); }
+  .btn-primary { background: var(--violet); }
+  .hero-watermark .wm-outline { opacity: 0.35; -webkit-text-stroke-width: 2px; }
+  .hero-watermark .wm-fill { opacity: 0.15; }
+
+  /* hardcoded: these sections keep a dark bg regardless of theme token */
+  .marquee-section { background: #1a1520; }
+  .projects { background: #1a1520; }
+  .projects-title { color: var(--ink); }
+  .project-mini-name { color: var(--ink); }
+  .project-mini { border-top-color: rgba(240,237,230,0.08); }
+  .projects .section-label { color: rgba(240,237,230,0.35); }
 }
 
 html { scroll-behavior: smooth; }
@@ -281,7 +307,7 @@ footer {
 .hero { padding-bottom: 110px; }
 
 .hero-watermark {
-  font-size: clamp(180px, 30vw, 460px) !important;
+  font-size: clamp(50px, 12vw, 190px) !important;
   line-height: 0.82 !important;
   letter-spacing: -0.06em !important;
   opacity: 1 !important;
@@ -395,9 +421,9 @@ footer {
 .hero-tagline-main {
   position: relative;
   z-index: 2;
-  font-size: clamp(46px, 8vw, 124px) !important;
-  letter-spacing: -0.045em !important;
-  line-height: 0.88 !important;
+  font-size: clamp(46px, 8vw, 124px);
+  letter-spacing: -0.045em;
+  line-height: 0.88;
 }
 .hero-tagline-main .violet {
   font-style: italic;
@@ -1770,7 +1796,7 @@ footer { padding-bottom: 56px; }
 
 /* ═══ HOME PAGE — HERO & SECTIONS ═══ */
 .hero { min-height: 100vh; padding: 140px 48px 110px; display: flex; flex-direction: column; justify-content: flex-end; position: relative; overflow: hidden; }
-.hero-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -52%); font-family: var(--font-display); font-weight: 800; pointer-events: none; user-select: none; z-index: 0; }
+.hero-watermark { position: absolute; top: 32%; left: 50%; transform: translate(-50%, -50%); font-family: var(--font-display); font-weight: 800; pointer-events: none; user-select: none; z-index: 0; }
 .hero-blob { position: absolute; top: 15%; right: 8%; width: clamp(200px, 25vw, 380px); height: clamp(200px, 25vw, 380px); border-radius: 50%; background: radial-gradient(circle, rgba(123,92,246,0.22) 0%, transparent 70%); pointer-events: none; animation: blobFloat 8s ease-in-out infinite; }
 .hero-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 28px; display: flex; align-items: center; gap: 16px; opacity: 0; animation: fadeUp 0.8s 0.2s forwards; position: relative; z-index: 2; }
 .hero-label::before { content: ''; display: block; width: 32px; height: 1px; background: var(--muted); }
@@ -2036,6 +2062,7 @@ footer { padding-bottom: 56px; }
   .hero-bottom-row { gap: 24px; }
   .hero-grid { display: none; }
   .hero-blob, .hero-blob-2 { display: none; }
+  .hero-watermark { font-size: clamp(40px, 12vw, 90px) !important; top: 44%; transform: translate(-50%, -50%); }
 
   /* HOME — Duality */
   .duality { padding-top: 48px !important; padding-bottom: 48px !important; }
@@ -2183,4 +2210,19 @@ footer { padding-bottom: 56px; }
   .cursor, .cursor-ring { display: none !important; }
   a, button { min-height: 44px; }
   .nav-links a { min-height: 36px; display: flex; align-items: center; }
+}
+
+/* ── DARK MODE OVERRIDES — placed last so cascade wins ── */
+@media (prefers-color-scheme: dark) {
+  .marquee-section { background: #1a1520; }
+  .marquee-item { color: rgba(240,237,230,0.55); }
+
+  .projects { background: #1a1520; color: var(--ink); }
+  .projects-title { color: var(--ink); }
+  .projects .section-label { color: rgba(240,237,230,0.35); }
+  .projects .section-label::after { background: rgba(240,237,230,0.08); }
+  .project-mini { border-top-color: rgba(240,237,230,0.08); }
+  .project-mini-name { color: var(--ink); }
+  .project-mini-type { color: rgba(240,237,230,0.5); }
+  .projects-see-all { color: var(--bg); }
 }
