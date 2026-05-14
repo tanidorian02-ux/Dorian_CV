@@ -2225,4 +2225,16 @@ footer { padding-bottom: 56px; }
   .project-mini-name { color: var(--ink); }
   .project-mini-type { color: rgba(240,237,230,0.5); }
   .projects-see-all { color: var(--bg); }
+
+  .real-projects { background: #1a1520; color: var(--ink); }
+  .real-projects .section-label { color: rgba(240,237,230,0.35); }
+  .real-projects .section-label::after { background: rgba(240,237,230,0.08); }
+  .real-projects .section-title { color: var(--ink); }
+  .project-feature-name { color: var(--ink); }
+  .project-feature-desc { color: rgba(240,237,230,0.6); }
+  .ptag { color: rgba(240,237,230,0.55); border-color: rgba(240,237,230,0.2); }
+  .project-feature { border-top-color: rgba(240,237,230,0.08); }
+  .project-feature:last-child { border-bottom-color: rgba(240,237,230,0.08); }
+  .project-feature-meta { color: var(--violet-light); }
+  .project-feature-meta .num { color: rgba(240,237,230,0.2); }
 }
