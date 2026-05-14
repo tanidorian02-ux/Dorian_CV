@@ -193,7 +193,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      object-position: center;
+      object-position: center 30%;
     }
     .hero::before {
       content: '';
@@ -369,6 +369,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      object-position: center center;
       transition: transform 320ms ease;
     }
     .product-card:hover .card-img img { transform: scale(1.06); }
@@ -843,7 +844,8 @@
       nav { padding: 0 20px; }
       .nav-links, .nav-cta { display: none; }
       .burger { display: flex; }
-      .hero { padding: 0 0 52px 24px; }
+      .hero { padding: 0 0 52px 24px; height: 70vh; min-height: 480px; }
+      .hero-photo { object-position: center 40%; }
       .hero-title { font-size: clamp(3.5rem, 18vw, 6rem); }
       .menu-section { padding: 64px 20px; }
       .section-head { flex-direction: column; align-items: flex-start; gap: 14px; }
