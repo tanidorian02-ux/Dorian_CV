@@ -8,6 +8,7 @@ export default function Animation() {
   const [modalOpen, setModalOpen] = useState(false)
   const [modalSrc, setModalSrc] = useState('')
   const [modalTitle, setModalTitle] = useState('')
+  const [modalLoop, setModalLoop] = useState(false)
   const [clock, setClock] = useState('')
   const [startMenuOpen, setStartMenuOpen] = useState(false)
 
@@ -141,8 +142,10 @@ export default function Animation() {
   }, [])
 
   // Modal
+  const LOOP_VIDEOS = ['velo.mp4', 'caf%C3%A9.mp4']
   const openModal = (src: string, title: string) => {
-    setModalSrc(src); setModalTitle(title); setModalOpen(true)
+    const shouldLoop = LOOP_VIDEOS.some(v => src.includes(v))
+    setModalSrc(src); setModalTitle(title); setModalLoop(shouldLoop); setModalOpen(true)
     setTimeout(() => { modalVideoRef.current?.play().catch(() => {}) }, 100)
   }
   const closeModal = () => {
@@ -296,7 +299,7 @@ export default function Animation() {
               <button className="modal-close" onClick={closeModal}>✕</button>
             </div>
             <div className="modal-body">
-              <video ref={modalVideoRef} id="modal-video" controls src={modalSrc}></video>
+              <video ref={modalVideoRef} id="modal-video" controls src={modalSrc} loop={modalLoop}></video>
             </div>
             <div className="modal-footer"><button onClick={closeModal}>Fermer</button></div>
           </div>
