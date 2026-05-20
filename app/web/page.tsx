@@ -36,7 +36,7 @@ export default function Web() {
         <div className="hero-blob"></div>
         <div className="hero-label">Sites Web — Projets &amp; exercices</div>
         <h1 className="hero-title">
-          Sites Web<br />&amp; <span className="violet">Intelligence</span><br />Artificielle.
+          Sites Web<br />&amp; <span className="violet">Voice Bot.</span>
         </h1>
         <div className="hero-bottom">
           <p className="hero-sub">De la landing page à l&apos;agent IA — des produits conçus, codés et déployés.</p>
