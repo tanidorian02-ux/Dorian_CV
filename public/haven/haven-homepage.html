@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HAVEN Immobilier — Mons & Hainaut</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ivory:  #F4EFE5;
+      --ivory2: #EDE8DC;
+      --forest: #1C2B1E;
+      --gold:   #B8955A;
+      --text:   #2C2C2C;
+      --muted:  #8A8880;
+      --serif:  'Cormorant Garamond', Georgia, serif;
+      --sans:   'DM Sans', system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      background: var(--ivory);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+    .reveal.in-view { opacity: 1; transform: translateY(0); }
+
+    /* ── LABELS — / prefix doré ── */
+    .label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+    }
+    .label::before {
+      content: '/';
+      font-family: var(--serif);
+      font-style: italic;
+      color: var(--gold);
+      font-size: 15px;
+      margin-right: 7px;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 52px;
+      height: 72px;
+      background: transparent;
+      transition: background 0.4s ease, box-shadow 0.4s ease;
+    }
+    .nav.scrolled {
+      background: var(--ivory);
+      box-shadow: 0 1px 0 rgba(44,44,44,0.08);
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-size: 19px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--ivory);
+      transition: color 0.4s;
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .nav-logo-sub {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-style: normal;
+      opacity: 0.65;
+    }
+    .nav.scrolled .nav-logo { color: var(--forest); }
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(244,239,229,0.75);
+      transition: color 0.3s;
+    }
+    .nav.scrolled .nav-links a { color: var(--text); }
+    .nav-links a:hover { color: var(--ivory); }
+    .nav.scrolled .nav-links a:hover { color: var(--forest); }
+    .nav-cta {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      padding: 10px 24px;
+      border: 1px solid rgba(244,239,229,0.45);
+      color: var(--ivory);
+      transition: all 0.3s;
+      cursor: pointer;
+      background: transparent;
+    }
+    .nav.scrolled .nav-cta { border-color: var(--forest); color: var(--forest); }
+    .nav-cta:hover { background: var(--ivory); color: var(--forest); }
+    .nav.scrolled .nav-cta:hover { background: var(--forest); color: var(--ivory); }
+
+    /* Burger */
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      background: none;
+      border: none;
+      padding: 10px;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+    .nav-burger span {
+      display: block;
+      width: 22px;
+      height: 1px;
+      background: var(--ivory);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform-origin: center;
+    }
+    .nav.scrolled .nav-burger span { background: var(--forest); }
+    .nav-burger.open span:first-child { transform: translateY(4.5px) rotate(45deg); }
+    .nav-burger.open span:last-child  { transform: translateY(-4.5px) rotate(-45deg); }
+
+    /* Mobile overlay */
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--ivory);
+      z-index: 99;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .mobile-overlay.open { opacity: 1; pointer-events: all; }
+    .mob-nav {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 28px;
+      margin-bottom: 56px;
+    }
+    .mob-nav a {
+      font-family: var(--serif);
+      font-size: 36px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--forest);
+      letter-spacing: 0.03em;
+      transition: opacity 0.2s;
+    }
+    .mob-nav a:hover { opacity: 0.5; }
+    .mob-cta {
+      display: block;
+      width: 240px;
+      padding: 16px 32px;
+      background: var(--forest);
+      color: var(--ivory);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.07em;
+      text-align: center;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 640px;
+      overflow: hidden;
+    }
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 35%;
+      animation: heroZoom 9s ease-out forwards;
+    }
+    @keyframes heroZoom {
+      from { transform: scale(1.09); }
+      to   { transform: scale(1); }
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(28,43,30,0.22) 0%,
+        rgba(28,43,30,0.04) 35%,
+        rgba(28,43,30,0.68) 100%
+      );
+    }
+
+    /* Ligne décorative verticale centrée — Aria Verde */
+    .hero-vline {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 0;
+      background: rgba(244,239,229,0.22);
+      animation: vlineGrow 1.2s 0.4s ease forwards;
+    }
+    @keyframes vlineGrow {
+      to { height: 88px; }
+    }
+
+    /* Scroll indicator vertical droit */
+    .hero-scroll {
+      position: absolute;
+      right: 32px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-scroll-label {
+      font-size: 9px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(244,239,229,0.4);
+      writing-mode: vertical-lr;
+    }
+    .hero-scroll-track {
+      width: 1px;
+      height: 64px;
+      background: rgba(244,239,229,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-scroll-track::after {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gold);
+      animation: scrollPulse 2s 1.2s ease-in-out infinite;
+    }
+    @keyframes scrollPulse {
+      0%   { top: -100%; }
+      50%  { top: 0%; }
+      100% { top: 100%; }
+    }
+
+    /* Hero content */
+    .hero-content {
+      position: absolute;
+      bottom: 80px;
+      left: 52px;
+      max-width: 60%;
+    }
+    .hero-kicker {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(244,239,229,0.6);
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+    .hero-kicker::before {
+      content: '/';
+      font-family: var(--serif);
+      font-style: italic;
+      color: var(--gold);
+      font-size: 16px;
+      margin-right: 8px;
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(54px, 8vw, 122px);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--ivory);
+      line-height: 0.95;
+      letter-spacing: -0.01em;
+      margin-bottom: 40px;
+      animation: fadeUp 0.9s 0.4s ease both;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      animation: fadeUp 0.8s 0.6s ease both;
+    }
+    .hero-cta {
+      display: inline-block;
+      padding: 14px 36px;
+      background: var(--ivory);
+      color: var(--forest);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: background 0.3s, color 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    .hero-cta:hover { background: var(--gold); color: var(--ivory); }
+    .hero-cta-ghost {
+      display: inline-block;
+      padding: 14px 36px;
+      background: transparent;
+      color: var(--ivory);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border: 1px solid rgba(244,239,229,0.4);
+      transition: border-color 0.3s, background 0.3s;
+      cursor: pointer;
+    }
+    .hero-cta-ghost:hover { border-color: var(--ivory); background: rgba(244,239,229,0.07); }
+
+    /* Mini stat card flottante — Terris */
+    .hero-stat {
+      position: absolute;
+      bottom: 56px;
+      right: 88px;
+      background: var(--ivory);
+      padding: 20px 28px;
+      animation: fadeUp 0.8s 0.8s ease both;
+    }
+    .hero-stat-num {
+      font-family: var(--serif);
+      font-size: 44px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--forest);
+      line-height: 1;
+      display: block;
+    }
+    .hero-stat-label {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    /* ── TICKER ── */
+    .ticker {
+      background: var(--forest);
+      overflow: hidden;
+      padding: 26px 0;
+      white-space: nowrap;
+    }
+    .ticker-track {
+      display: inline-flex;
+      align-items: baseline;
+      animation: tick 28s linear infinite;
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 0 56px;
+    }
+    .ticker-num {
+      font-family: var(--serif);
+      font-size: 40px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--ivory);
+      line-height: 1;
+    }
+    .ticker-label {
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(244,239,229,0.4);
+    }
+    .ticker-dot {
+      font-family: var(--serif);
+      font-size: 24px;
+      font-style: italic;
+      color: var(--gold);
+      align-self: center;
+    }
+    @keyframes tick {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    /* ── SERVICES ── */
+    .services {
+      padding: 128px 52px;
+      background: var(--ivory);
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: clamp(36px, 4vw, 54px);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--forest);
+      line-height: 1.12;
+      margin-bottom: 72px;
+      max-width: 500px;
+    }
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid rgba(44,44,44,0.1);
+    }
+    .svc {
+      position: relative;
+      overflow: hidden;
+      padding: 52px 44px 52px 0;
+      border-right: 1px solid rgba(44,44,44,0.1);
+    }
+    .svc:not(:first-child) { padding-left: 44px; }
+    .svc:last-child { border-right: none; }
+
+    /* Reveal from bottom — forest */
+    .svc::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 0;
+      background: var(--forest);
+      transition: height 0.52s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
+    }
+    .svc:hover::before { height: 100%; }
+    .svc > * { position: relative; z-index: 1; }
+
+    .svc-num {
+      font-family: var(--serif);
+      font-size: 13px;
+      font-style: italic;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 20px;
+      transition: color 0.4s;
+    }
+    .svc-name {
+      font-family: var(--serif);
+      font-size: 34px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--forest);
+      margin-bottom: 16px;
+      line-height: 1.05;
+      transition: color 0.4s;
+    }
+    .svc-desc {
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.75;
+      margin-bottom: 28px;
+      transition: color 0.4s;
+    }
+    .svc-link {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--forest);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: gap 0.3s, color 0.4s;
+    }
+    .svc-link:hover { gap: 14px; }
+    .svc-link::after { content: '→'; }
+
+    .svc:hover .svc-num  { color: var(--gold); }
+    .svc:hover .svc-name { color: var(--ivory); }
+    .svc:hover .svc-desc { color: rgba(244,239,229,0.55); }
+    .svc:hover .svc-link { color: var(--ivory); }
+
+    /* ── BIENS EN VEDETTE ── */
+    .biens {
+      padding: 128px 52px;
+      background: #FAF7F1;
+    }
+    .biens-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-bottom: 56px;
+    }
+    .biens-head .section-title { margin-bottom: 0; }
+    .voir-tout {
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: color 0.3s, gap 0.3s;
+      padding-bottom: 4px;
+    }
+    .voir-tout::after { content: '→'; }
+    .voir-tout:hover { color: var(--forest); gap: 13px; }
+
+    /* Grille : 1 grande gauche + 2 droite — Terris */
+    .biens-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3px;
+    }
+    .biens-col-right {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 3px;
+    }
+
+    /* Cards plein-format image */
+    .bien-card {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .bien-card.large { min-height: 580px; }
+    .bien-card:not(.large) { min-height: 0; }
+
+    .bien-card img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.65s ease;
+      z-index: 0;
+    }
+    .bien-card:hover img { transform: scale(1.05); }
+
+    /* Gradient overlay sombre — Terris */
+    .bien-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(18,26,18,0.85) 0%,
+        rgba(18,26,18,0.22) 52%,
+        transparent 100%
+      );
+      z-index: 1;
+    }
+
+    /* Badge statut */
+    .bien-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: var(--forest);
+      color: var(--ivory);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 5px 11px;
+      z-index: 2;
+    }
+
+    /* Infos overlay bas */
+    .bien-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 24px 24px 52px;
+      z-index: 2;
+    }
+    .bien-loc {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(244,239,229,0.5);
+      margin-bottom: 6px;
+    }
+    .bien-name {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--ivory);
+      margin-bottom: 8px;
+      line-height: 1.2;
+    }
+    .bien-specs {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+    .bien-specs span {
+      font-size: 12px;
+      color: rgba(244,239,229,0.5);
+    }
+    .bien-price {
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 500;
+      color: var(--ivory);
+    }
+
+    /* Flèche carrée — Terris */
+    .bien-arrow {
+      position: absolute;
+      bottom: 18px;
+      right: 18px;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(244,239,229,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      color: rgba(244,239,229,0.45);
+      font-size: 15px;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .bien-card:hover .bien-arrow {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    /* ── POURQUOI NOUS — éditorial ── */
+    .pourquoi {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 680px;
+    }
+    .pourquoi-photo {
+      overflow: hidden;
+      position: relative;
+    }
+    .pourquoi-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    /* Chiffre décoratif géant en filigrane — Aria Verde */
+    .pourquoi-photo::after {
+      content: '12';
+      position: absolute;
+      bottom: -30px;
+      left: -14px;
+      font-family: var(--serif);
+      font-size: clamp(180px, 22vw, 300px);
+      font-weight: 600;
+      font-style: italic;
+      color: var(--ivory);
+      opacity: 0.1;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .pourquoi-content {
+      background: var(--forest);
+      padding: 96px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .pourquoi-content .label {
+      color: rgba(244,239,229,0.3);
+    }
+    .pourquoi-title {
+      font-family: var(--serif);
+      font-size: clamp(34px, 3.2vw, 50px);
+      font-weight: 400;
+      color: var(--ivory);
+      line-height: 1.1;
+      margin-bottom: 28px;
+      max-width: 420px;
+    }
+    /* Mot-clé en gold italic — Aria Verde */
+    .pourquoi-title em {
+      color: var(--gold);
+      font-style: italic;
+    }
+    .pourquoi-text {
+      font-size: 15px;
+      font-weight: 300;
+      color: rgba(244,239,229,0.48);
+      line-height: 1.8;
+      margin-bottom: 52px;
+    }
+
+    /* Valeurs séparées par des bordures fines */
+    .values {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 52px;
+    }
+    .value {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      padding: 20px 0;
+      border-top: 1px solid rgba(244,239,229,0.08);
+    }
+    .values .value:last-child {
+      border-bottom: 1px solid rgba(244,239,229,0.08);
+    }
+    .value-n {
+      font-family: var(--serif);
+      font-size: 14px;
+      font-style: italic;
+      color: var(--gold);
+      min-width: 24px;
+      padding-top: 2px;
+    }
+    .value-body {
+      font-size: 14px;
+      line-height: 1.65;
+      color: rgba(244,239,229,0.55);
+    }
+    .value-body strong {
+      font-weight: 500;
+      color: var(--ivory);
+      display: block;
+      margin-bottom: 3px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 14px 36px;
+      background: var(--ivory);
+      color: var(--forest);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      align-self: flex-start;
+      transition: background 0.3s, color 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover { background: var(--gold); color: var(--ivory); }
+
+    /* ── TÉMOIGNAGES ── */
+    .temoignages {
+      background: var(--ivory);
+      padding: 128px 52px;
+    }
+    .temoignages .section-title { color: var(--forest); margin-bottom: 80px; }
+    .temo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .temo {
+      display: flex;
+      flex-direction: column;
+      padding: 40px 36px;
+      background: var(--ivory2);
+      transition: background 0.42s ease;
+    }
+    .temo:hover { background: var(--forest); }
+
+    /* 5 étoiles clip-path */
+    .temo-stars {
+      display: flex;
+      gap: 5px;
+      margin-bottom: 22px;
+    }
+    .star {
+      width: 13px;
+      height: 13px;
+      background: var(--gold);
+      clip-path: polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+      flex-shrink: 0;
+    }
+    .temo-quote {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--forest);
+      line-height: 1.55;
+      margin-bottom: 28px;
+      flex: 1;
+      transition: color 0.4s;
+    }
+    .temo:hover .temo-quote { color: var(--ivory); }
+    .temo-line {
+      width: 28px;
+      height: 1px;
+      background: var(--gold);
+      margin-bottom: 18px;
+    }
+    .temo-who {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+      transition: color 0.4s;
+    }
+    .temo:hover .temo-who { color: rgba(244,239,229,0.45); }
+    .temo-who strong {
+      display: block;
+      font-weight: 500;
+      color: var(--forest);
+      margin-bottom: 2px;
+      transition: color 0.4s;
+    }
+    .temo:hover .temo-who strong { color: var(--ivory); }
+
+    /* ── CTA FINAL ── */
+    .cta-final {
+      background: var(--ivory2);
+      padding: 140px 52px 128px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Ligne dorée verticale depuis le haut */
+    .cta-final::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 72px;
+      background: var(--gold);
+    }
+    .cta-final .label { color: var(--muted); }
+    .cta-title {
+      font-family: var(--serif);
+      font-size: clamp(48px, 7vw, 102px);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--forest);
+      line-height: 1.04;
+      max-width: 840px;
+    }
+    .cta-sub {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 380px;
+      line-height: 1.7;
+    }
+    /* Bouton plein forest */
+    .btn-forest {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 16px 48px;
+      background: var(--forest);
+      color: var(--ivory);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: background 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn-forest:hover { background: #2e4832; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--forest);
+      border-top: 1px solid rgba(244,239,229,0.07);
+      padding: 72px 52px 44px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 72px;
+      margin-bottom: 56px;
+    }
+    .footer-logo {
+      font-family: var(--serif);
+      font-size: 26px;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--ivory);
+      margin-bottom: 16px;
+      letter-spacing: 0.06em;
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+    }
+    .footer-logo-sub {
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 300;
+      font-style: normal;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0.45;
+    }
+    .footer-desc {
+      font-size: 13px;
+      font-weight: 300;
+      color: rgba(244,239,229,0.32);
+      line-height: 1.7;
+      max-width: 300px;
+    }
+    .footer-col h4 {
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(244,239,229,0.22);
+      margin-bottom: 20px;
+    }
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .footer-col a {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(244,239,229,0.48);
+      transition: color 0.3s;
+      line-height: 1.5;
+    }
+    .footer-col a:hover { color: var(--ivory); }
+    .footer-col p {
+      font-size: 14px;
+      font-weight: 300;
+      color: rgba(244,239,229,0.48);
+      line-height: 1.7;
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(244,239,229,0.07);
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-legal {
+      font-size: 12px;
+      color: rgba(244,239,229,0.2);
+    }
+    .footer-legal a {
+      color: rgba(244,239,229,0.2);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.3s;
+    }
+    .footer-legal a:hover { color: rgba(244,239,229,0.5); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1100px) {
+      .services-grid { grid-template-columns: 1fr; }
+      .svc {
+        border-right: none;
+        border-bottom: 1px solid rgba(44,44,44,0.1);
+        padding: 44px 0 !important;
+      }
+      .svc:last-child { border-bottom: none; }
+
+      .biens-grid { grid-template-columns: 1fr; }
+      .biens-col-right { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .bien-card.large { min-height: 400px; }
+      .bien-card:not(.large) { min-height: 280px; }
+
+      .temo-grid { grid-template-columns: 1fr; gap: 12px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 48px; }
+    }
+
+    @media (max-width: 768px) {
+      .nav { padding: 0 24px; }
+      .nav-links, .nav-cta { display: none; }
+      .nav-burger { display: flex; }
+
+      .hero-content { left: 24px; max-width: calc(100% - 60px); bottom: 52px; }
+      .hero-title { font-size: clamp(44px, 14vw, 72px); }
+      .hero-actions { flex-direction: column; gap: 10px; }
+      .hero-cta, .hero-cta-ghost { text-align: center; }
+      .hero-scroll { right: 12px; }
+      .hero-stat {
+        right: auto;
+        left: 24px;
+        bottom: auto;
+        top: 88px;
+        padding: 14px 18px;
+      }
+      .hero-stat-num { font-size: 30px; }
+
+      .services { padding: 80px 24px; }
+
+      .biens { padding: 80px 24px; }
+      .biens-head { flex-direction: column; align-items: flex-start; gap: 12px; }
+      .biens-grid { grid-template-columns: 1fr; }
+      .biens-col-right { grid-template-columns: 1fr; }
+      .bien-card.large { min-height: 320px; }
+      .bien-card:not(.large) { min-height: 240px; }
+
+      .pourquoi { grid-template-columns: 1fr; }
+      .pourquoi-photo { height: 380px; }
+      .pourquoi-photo::after { font-size: 150px; }
+      .pourquoi-content { padding: 64px 24px; }
+
+      .temoignages { padding: 80px 24px; }
+      .temo-grid { grid-template-columns: 1fr; }
+
+      .cta-final { padding: 100px 24px 80px; }
+
+      footer { padding: 56px 24px 36px; }
+      .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+      .footer-bottom { flex-direction: column; gap: 10px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <a href="#home" class="nav-logo">HAVEN <span class="nav-logo-sub">Immobilier</span></a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#biens">Nos biens</a></li>
+    <li><a href="#agence">L'agence</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#estimation" class="nav-cta">Estimation gratuite</a>
+  <button class="nav-burger" id="burger" aria-label="Menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+  </button>
+</header>
+
+<!-- MOBILE OVERLAY -->
+<div class="mobile-overlay" id="mobileOverlay" role="dialog" aria-modal="true">
+  <nav class="mob-nav">
+    <a href="#services" class="mob-link">Services</a>
+    <a href="#biens" class="mob-link">Nos biens</a>
+    <a href="#agence" class="mob-link">L'agence</a>
+    <a href="#contact" class="mob-link">Contact</a>
+  </nav>
+  <a href="#estimation" class="mob-cta mob-link">Estimation gratuite</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <img class="hero-img"
+       src="pisctures/11jhjq9yuqkyyoxgo1imkvl05hevk7d716qzql8wk.png"
+       alt="Villa brique avec jardin — Hainaut — HAVEN Immobilier">
+  <div class="hero-overlay"></div>
+  <div class="hero-vline"></div>
+
+  <div class="hero-content">
+    <p class="hero-kicker">Immobilier · Mons &amp; Hainaut</p>
+    <h1 class="hero-title">Votre bien.<br>Entre de<br>bonnes mains.</h1>
+    <div class="hero-actions">
+      <a href="#estimation" class="hero-cta">Estimation gratuite</a>
+      <a href="#biens" class="hero-cta-ghost">Voir nos biens</a>
+    </div>
+  </div>
+
+  <!-- Scroll indicator vertical droit -->
+  <div class="hero-scroll" aria-hidden="true">
+    <span class="hero-scroll-label">Scroll</span>
+    <div class="hero-scroll-track"></div>
+  </div>
+
+  <!-- Mini card stat flottante -->
+  <div class="hero-stat" aria-hidden="true">
+    <span class="hero-stat-num">43j</span>
+    <p class="hero-stat-label">Délai moyen de vente</p>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <div class="ticker-item"><span class="ticker-num">147</span><span class="ticker-label">biens vendus</span></div>
+    <span class="ticker-dot">·</span>
+    <div class="ticker-item"><span class="ticker-num">12</span><span class="ticker-label">ans d'expérience</span></div>
+    <span class="ticker-dot">·</span>
+    <div class="ticker-item"><span class="ticker-num">98%</span><span class="ticker-label">clients satisfaits</span></div>
+    <span class="ticker-dot">·</span>
+    <div class="ticker-item"><span class="ticker-num">43</span><span class="ticker-label">jours délai moyen</span></div>
+    <span class="ticker-dot">·</span>
+    <!-- duplicate for seamless loop -->
+    <div class="ticker-item"><span class="ticker-num">147</span><span class="ticker-label">biens vendus</span></div>
+    <span class="ticker-dot">·</span>
+    <div class="ticker-item"><span class="ticker-num">12</span><span class="ticker-label">ans d'expérience</span></div>
+    <span class="ticker-dot">·</span>
+    <div class="ticker-item"><span class="ticker-num">98%</span><span class="ticker-label">clients satisfaits</span></div>
+    <span class="ticker-dot">·</span>
+    <div class="ticker-item"><span class="ticker-num">43</span><span class="ticker-label">jours délai moyen</span></div>
+    <span class="ticker-dot">·</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services reveal" id="services">
+  <p class="label">Ce que nous faisons</p>
+  <h2 class="section-title">Un accompagnement<br>complet, de A à Z</h2>
+  <div class="services-grid">
+    <div class="svc">
+      <span class="svc-num">01</span>
+      <h3 class="svc-name">Vendre</h3>
+      <p class="svc-desc">Nous prenons en charge toute la mise en valeur de votre bien — photos professionnelles, diffusion ciblée, visites accompagnées, négociation. Vous ne gérez rien.</p>
+      <a href="#contact" class="svc-link">En savoir plus</a>
+    </div>
+    <div class="svc">
+      <span class="svc-num">02</span>
+      <h3 class="svc-name">Acheter</h3>
+      <p class="svc-desc">Nous connaissons chaque rue du Hainaut. Partagez vos critères, nous vous proposons des biens en avant-première — avant qu'ils apparaissent sur les portails.</p>
+      <a href="#contact" class="svc-link">En savoir plus</a>
+    </div>
+    <div class="svc">
+      <span class="svc-num">03</span>
+      <h3 class="svc-name">Estimer</h3>
+      <p class="svc-desc">Une estimation ancrée dans les transactions réelles de votre commune. Pas un algorithme en ligne — un regard d'expert sur votre bien, gratuit et sans engagement.</p>
+      <a href="#estimation" class="svc-link">Estimation gratuite</a>
+    </div>
+  </div>
+</section>
+
+<!-- BIENS EN VEDETTE -->
+<section class="biens reveal" id="biens">
+  <div class="biens-head">
+    <div>
+      <p class="label">Nos biens</p>
+      <h2 class="section-title">Sélection du moment</h2>
+    </div>
+    <a href="#" class="voir-tout">Voir tous les biens</a>
+  </div>
+
+  <div class="biens-grid">
+    <!-- Grande carte gauche -->
+    <article class="bien-card large">
+      <img src="pisctures/gXoBxdB2qtKmFCG9n_d_uUoSCxV8XaAuldS0uJxOQHY8aaX7zXSOcXVNQ4ml9kgKCaDyzB88DPAN3bU6NFfoShuJl7cdR5HssGBMBXzmoyj4PIQgAgPiETPWrx43qmjXvU2g1x4uhk0ttmjtFw9Ww6OoTn6pkdmmVvWQqDOqZXz2YLEj.jpg"
+           alt="Villa avec jardin — Mons">
+      <span class="bien-badge">À vendre</span>
+      <div class="bien-info">
+        <p class="bien-loc">Mons · Hainaut</p>
+        <h3 class="bien-name">Villa avec jardin et vue dégagée</h3>
+        <div class="bien-specs">
+          <span>4 ch.</span>
+          <span>178 m²</span>
+          <span>840 m² terrain</span>
+        </div>
+        <p class="bien-price">395 000 €</p>
+      </div>
+      <div class="bien-arrow">→</div>
+    </article>
+
+    <!-- 2 cartes empilées droite -->
+    <div class="biens-col-right">
+      <article class="bien-card">
+        <img src="pisctures/HOzX19NVg013-Hk2UZV30QlPeqLDoxrYVuCugRkhkYMzy_B5XZoIB35S0egAZW6UpZ3kJiphaNLkv0GBNlFQWxQEulVD1bH0XAH7peszTaWIsWh57rJKLfsq0sZ8wrHGKS7Dd_RenjnC7jDDRDlz4RFPlDX9cpoePj__WTlVQPTK2cSm.jpg"
+             alt="Maison rénovée — Jemappes">
+        <span class="bien-badge">À vendre</span>
+        <div class="bien-info">
+          <p class="bien-loc">Jemappes · Mons</p>
+          <h3 class="bien-name">Maison rénovée, quartier calme</h3>
+          <div class="bien-specs">
+            <span>3 ch.</span>
+            <span>132 m²</span>
+            <span>Jardin arrière</span>
+          </div>
+          <p class="bien-price">249 000 €</p>
+        </div>
+        <div class="bien-arrow">→</div>
+      </article>
+
+      <article class="bien-card">
+        <img src="pisctures/f1ALCZUMGXC1LAdeqknS2A-S0nvCon4mOfQv2x3_if5eSU8doNz_Kv3HJyCT9vlcAeuicHqH_pRV7UaqK4-AJnBEbmutexUPEnoVuVWAuXEYN4qWNjlHDhAK9erz2A3G6aWPOIHaLN2yHTnqex-ikPWTiTDknGiuOgHkTbrv5b6FPHaL.jpg"
+             alt="Maison de ville — Boussu">
+        <span class="bien-badge">À vendre</span>
+        <div class="bien-info">
+          <p class="bien-loc">Boussu · Hainaut</p>
+          <h3 class="bien-name">Maison de ville avec commerce</h3>
+          <div class="bien-specs">
+            <span>4 ch.</span>
+            <span>210 m²</span>
+            <span>Usage mixte</span>
+          </div>
+          <p class="bien-price">185 000 €</p>
+        </div>
+        <div class="bien-arrow">→</div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- POURQUOI NOUS -->
+<section class="pourquoi reveal" id="agence">
+  <div class="pourquoi-photo">
+    <img src="pisctures/LhiR6nAxQiR4HJmU1bkPhxstYooIz4HuNfj66X6YkRCbKiqcpWTRp81wfp4l4Tq57hAjCjw3sGyw6nkxPrCHf1CV7t4ACeBDznZb1P4sdlfT1QeIxWbiQBNgoUhAbCjFIWfkJQDLBxr4QtfKH9IsPWviMNuX-s2rzTooof0AGOAAfzkO.jpg"
+         alt="Terrasse brique architecturale — Hainaut">
+  </div>
+  <div class="pourquoi-content">
+    <p class="label">L'agence</p>
+    <h2 class="pourquoi-title">Une agence <em>locale</em>,<br>pas un réseau anonyme</h2>
+    <p class="pourquoi-text">Chez HAVEN, chaque bien est suivi par la même personne du premier contact jusqu'à la signature. Nous connaissons les prix rue par rue. Et nous ne vous ferons jamais miroiter une estimation irréaliste pour décrocher votre mandat.</p>
+    <div class="values">
+      <div class="value">
+        <span class="value-n">01</span>
+        <div class="value-body">
+          <strong>Ancrage local</strong>
+          Mons, Jemappes, Quaregnon, Colfontaine — notre terrain de jeu depuis 12 ans.
+        </div>
+      </div>
+      <div class="value">
+        <span class="value-n">02</span>
+        <div class="value-body">
+          <strong>Transparence totale</strong>
+          Estimations basées sur les transactions récentes réelles, pas sur vos espoirs.
+        </div>
+      </div>
+      <div class="value">
+        <span class="value-n">03</span>
+        <div class="value-body">
+          <strong>Un seul interlocuteur</strong>
+          Pas de turn-over, pas de surprise. Vous parlez toujours à la même personne.
+        </div>
+      </div>
+    </div>
+    <a href="#estimation" class="btn">Demander une estimation</a>
+  </div>
+</section>
+
+<!-- TÉMOIGNAGES -->
+<section class="temoignages reveal">
+  <p class="label">Témoignages</p>
+  <h2 class="section-title">Ce que disent<br>nos clients</h2>
+  <div class="temo-grid">
+
+    <div class="temo">
+      <div class="temo-stars">
+        <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+      </div>
+      <p class="temo-quote">« Vendu en 3 semaines au prix demandé. On ne pensait pas que c'était possible dans notre quartier. L'estimation était honnête dès le départ — pas de promesses en l'air. »</p>
+      <div class="temo-line"></div>
+      <div class="temo-who">
+        <strong>Marie-Claire V.</strong>
+        Jemappes
+      </div>
+    </div>
+
+    <div class="temo">
+      <div class="temo-stars">
+        <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+      </div>
+      <p class="temo-quote">« Première acquisition, et sans HAVEN on n'aurait pas su par où commencer. Réactifs, disponibles, et surtout honnêtes sur ce qui était réaliste avec notre budget. »</p>
+      <div class="temo-line"></div>
+      <div class="temo-who">
+        <strong>Julien &amp; Sarah M.</strong>
+        Mons
+      </div>
+    </div>
+
+    <div class="temo">
+      <div class="temo-stars">
+        <div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div>
+      </div>
+      <p class="temo-quote">« J'ai eu trois agences pour estimer ma maison. HAVEN m'a donné le prix le plus bas — et c'est celle-là qui avait raison. Vendu en 5 semaines, sans négociation. »</p>
+      <div class="temo-line"></div>
+      <div class="temo-who">
+        <strong>Philippe D.</strong>
+        Quaregnon
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final reveal" id="estimation">
+  <p class="label">Estimation gratuite</p>
+  <h2 class="cta-title">Combien vaut vraiment<br>votre bien ?</h2>
+  <p class="cta-sub">Une estimation réaliste, ancrée dans les données locales, sans engagement. Réponse sous 24h.</p>
+  <a href="#contact" class="btn-forest">Demander mon estimation</a>
+</section>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="footer-grid">
+    <div>
+      <p class="footer-logo">HAVEN <span class="footer-logo-sub">Immobilier</span></p>
+      <p class="footer-desc">Agence immobilière indépendante spécialisée dans la vente et l'estimation de biens résidentiels dans la région de Mons et du Hainaut.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigation</h4>
+      <ul>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#biens">Nos biens</a></li>
+        <li><a href="#agence">L'agence</a></li>
+        <li><a href="#estimation">Estimation</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:+3265000000">+32 65 00 00 00</a></li>
+        <li><a href="mailto:info@haven-immo.be">info@haven-immo.be</a></li>
+        <li><p>Place de Mons 12<br>7000 Mons, Belgique</p></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-legal">© 2025 HAVEN Immobilier. Tous droits réservés.</p>
+    <p class="footer-legal">
+      <a href="#">Mentions légales</a> &nbsp;·&nbsp;
+      <a href="#">Politique de confidentialité</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 80);
+  }, { passive: true });
+
+  // Mobile nav
+  const burger  = document.getElementById('burger');
+  const overlay = document.getElementById('mobileOverlay');
+
+  burger.addEventListener('click', () => {
+    const isOpen = overlay.classList.toggle('open');
+    burger.classList.toggle('open', isOpen);
+    burger.setAttribute('aria-expanded', String(isOpen));
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  overlay.querySelectorAll('.mob-link').forEach(link => {
+    link.addEventListener('click', () => {
+      overlay.classList.remove('open');
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    });
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && overlay.classList.contains('open')) {
+      overlay.classList.remove('open');
+      burger.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Scroll reveal — IntersectionObserver
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -48px 0px' });
+
+  revealEls.forEach(el => io.observe(el));
+</script>
+</body>
+</html>
