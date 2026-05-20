@@ -103,7 +103,7 @@ export default function Home() {
       {/* DUALITÉ */}
       <section className="duality reveal">
         <div className="duality-inner">
-          <div className="duality-title">Conçu.<br />Codé.<br /><span className="violet">Déployé.</span></div>
+          <div className="duality-title">Concu.<br />Codé.<br /><span className="violet">Déployé.</span></div>
           <div className="duality-body">
             <strong>Un seul interlocuteur du brief au déploiement.</strong> Je conçois, code et livre des outils IA, des automatisations et des interfaces utilisées par de vrais utilisateurs — pas des prototypes qui impressionnent en démo et s'arrêtent là.
           </div>
