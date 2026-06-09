@@ -240,6 +240,38 @@ export default function Animation() {
             <button className="win-open-btn" onClick={() => openModal(w.src, w.title)}>▶ Ouvrir en plein écran</button>
           </div>
         ))}
+
+        {/* YouTube window */}
+        <div className="win98" id="win-yt" style={{ position: 'fixed', width: '320px', top: '180px', left: '50%', transform: 'translateX(-50%) rotate(1deg)' }}>
+          <div className="win-titlebar">
+            <span className="win-title-text"><span className="win-title-icon">▶</span>Animation 2D · YouTube</span>
+            <div className="win-btns">
+              <button className="win-btn" onClick={() => minimizeWin('win-yt')}>_</button>
+              <button className="win-btn">□</button>
+              <button className="win-btn win-btn-close" onClick={() => closeWin('win-yt')}>✕</button>
+            </div>
+          </div>
+          <div className="win-content" style={{ padding: '18px 20px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '14px', background: '#c0c0c0' }}>
+            <div style={{ fontSize: '13px', color: '#000', textAlign: 'center', fontFamily: 'Arial, sans-serif', fontWeight: 'bold', lineHeight: 1.4 }}>
+              J&apos;ai travaillé là-dessus
+            </div>
+            <a
+              href="https://www.youtube.com/watch?v=PX7mrM-ZQ_8"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'flex', alignItems: 'center', gap: '8px',
+                background: '#ff0000', color: '#fff',
+                padding: '8px 16px', border: '2px solid #000',
+                boxShadow: '2px 2px 0 #000',
+                fontFamily: 'Arial, sans-serif', fontWeight: 'bold', fontSize: '13px',
+                textDecoration: 'none', cursor: 'pointer',
+              }}
+            >
+              <span style={{ fontSize: '16px' }}>▶</span> Voir sur YouTube
+            </a>
+          </div>
+        </div>
       </div>
 
       {/* TASKBAR */}
@@ -255,6 +287,9 @@ export default function Animation() {
               <span className="tb-task-icon">🎬</span>{w.label}
             </div>
           ))}
+          <div className="tb-task" onClick={() => { const el = document.getElementById('win-yt'); if (el) el.style.display = 'block' }}>
+            <span className="tb-task-icon">▶</span>Animation 2D.mp4
+          </div>
         </div>
         <div className="tb-tray">
           <span className="tb-tray-icon">🔊</span>
@@ -287,6 +322,17 @@ export default function Animation() {
               <span className="mobile-video-label">{w.label} ▶</span>
             </div>
           ))}
+          <a
+            href="https://www.youtube.com/watch?v=PX7mrM-ZQ_8"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mobile-video-card"
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px', background: '#111', textDecoration: 'none', minHeight: '120px' }}
+          >
+            <span style={{ fontSize: '36px' }}>▶</span>
+            <span style={{ color: '#fff', fontWeight: 'bold', fontSize: '13px', textAlign: 'center' }}>J&apos;ai travaillé là-dessus</span>
+            <span style={{ color: '#ff0000', fontSize: '12px', fontWeight: 'bold' }}>Voir sur YouTube</span>
+          </a>
         </div>
       </section>
 
