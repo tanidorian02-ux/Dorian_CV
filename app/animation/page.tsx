@@ -169,10 +169,10 @@ export default function Animation() {
   }
 
   const wins = [
-    { id: 'win1', src: '/motion%20design/burger.mp4', title: 'Burger Boy · Motion Design', label: 'Burger Boy.mp4', vertical: true,  style: { top: '70px',    left: '150px', transform: 'rotate(-2deg)' } },
-    { id: 'win2', src: '/motion%20design/caf%C3%A9.mp4', title: 'Café · Motion Design',  label: 'Café.mp4',       vertical: false, style: { top: '70px',    right: '80px', transform: 'rotate(3deg)'  } },
-    { id: 'win3', src: '/motion%20design/Pepsihori.mp4', title: 'Pepsi · Motion Design', label: 'Pepsi.mp4',      vertical: false, style: { bottom: '60px', left: '150px', transform: 'rotate(-1deg)' } },
-    { id: 'win4', src: '/motion%20design/velo.mp4', title: 'Vélo · Animation 2D',        label: 'Velo.mp4',       vertical: false, style: { bottom: '60px', right: '80px', transform: 'rotate(2deg)'  } },
+    { id: 'win1', src: '/motion%20design/burger.mp4',    title: 'Burger Boy · Motion Design', label: 'Burger Boy.mp4', vertical: true,  style: { top: '9vh',    left: '8vw',  transform: 'rotate(-2deg)' } },
+    { id: 'win2', src: '/motion%20design/caf%C3%A9.mp4', title: 'Café · Motion Design',        label: 'Café.mp4',       vertical: false, style: { top: '9vh',    right: '5vw', transform: 'rotate(3deg)'  } },
+    { id: 'win3', src: '/motion%20design/velo.mp4',      title: 'Vélo · Animation 2D',         label: 'Velo.mp4',       vertical: false, style: { bottom: '9vh', left: '8vw',  transform: 'rotate(-1deg)' } },
+    { id: 'win4', src: '/motion%20design/Pepsihori.mp4', title: 'Pepsi · Motion Design',       label: 'Pepsi.mp4',      vertical: false, style: { bottom: '9vh', right: '5vw', transform: 'rotate(2deg)'  } },
   ]
 
   return (
@@ -225,7 +225,7 @@ export default function Animation() {
 
         {/* Windows 98 */}
         {wins.map(w => (
-          <div key={w.id} className={`win98${w.vertical ? ' vertical' : ''}`} id={w.id} style={{ position: 'fixed', width: w.vertical ? '260px' : '430px', ...w.style }}>
+          <div key={w.id} className={`win98${w.vertical ? ' vertical' : ''}`} id={w.id} style={{ position: 'fixed', width: w.vertical ? 'min(260px, 22vw)' : 'min(430px, 40vw)', ...w.style }}>
             <div className="win-titlebar">
               <span className="win-title-text"><span className="win-title-icon">🎬</span>{w.label}</span>
               <div className="win-btns">
@@ -242,7 +242,7 @@ export default function Animation() {
         ))}
 
         {/* YouTube window */}
-        <div className="win98" id="win-yt" style={{ position: 'fixed', width: '320px', top: '180px', left: '50%', transform: 'translateX(-50%) rotate(1deg)' }}>
+        <div className="win98" id="win-yt" style={{ position: 'fixed', width: 'min(320px, 26vw)', top: '22vh', left: '50%', transform: 'translateX(-50%) rotate(1deg)' }}>
           <div className="win-titlebar">
             <span className="win-title-text"><span className="win-title-icon">▶</span>Animation 2D · YouTube</span>
             <div className="win-btns">
