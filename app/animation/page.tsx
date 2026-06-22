@@ -11,6 +11,16 @@ export default function Animation() {
   const [modalLoop, setModalLoop] = useState(false)
   const [clock, setClock] = useState('')
   const [startMenuOpen, setStartMenuOpen] = useState(false)
+  const [isMobile, setIsMobile] = useState<boolean | null>(null)
+
+  // Viewport — decides which video set to mount, avoids loading both
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)')
+    setIsMobile(mq.matches)
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
 
   // Clock
   useEffect(() => {
@@ -24,8 +34,9 @@ export default function Animation() {
   }, [])
 
 
-  // Windows drag
+  // Windows drag — reruns once isMobile resolves and the windows actually mount
   useEffect(() => {
+    if (isMobile !== false) return
     let zTop = 200
     const wins = document.querySelectorAll<HTMLElement>('.win98')
     wins.forEach(win => {
@@ -65,7 +76,7 @@ export default function Animation() {
       document.addEventListener('mousemove', onMouseMove)
       document.addEventListener('mouseup', onMouseUp)
     })
-  }, [])
+  }, [isMobile])
 
   // Lottie + mouse-driven animation
   useEffect(() => {
@@ -184,11 +195,23 @@ export default function Animation() {
         * { cursor: inherit !important; }
         a, button, .win98 { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='26' shape-rendering='crispEdges'%3E%3Cpath d='M2,1 L2,20 L6,15 L9,22 L12,21 L9,14 L14,14 L14,13 L13,13 L13,12 L12,12 L12,11 L11,11 L11,10 L10,10 L10,9 L9,9 L9,8 L8,8 L8,7 L7,7 L7,6 L6,6 L6,5 L5,5 L5,4 L4,4 L4,3 L3,3 L3,2 L2,2 Z' fill='white' stroke='black' stroke-width='1' stroke-linejoin='miter' paint-order='stroke'/%3E%3C/svg%3E") 2 1, pointer !important; }
         nav { background: rgba(0,80,80,0.75) !important; border-bottom-color: rgba(255,255,255,0.15) !important; height: 56px; }
+        .nav-back { color: rgba(240,237,230,0.7) !important; }
+        .nav-back:hover { color: #fff !important; }
+        .nav-links a { color: rgba(240,237,230,0.7) !important; }
+        .nav-links a:hover { color: #fff !important; }
+        .nav-links a.active { color: var(--orange) !important; }
+        .nav-links a.active::after { background: var(--orange) !important; }
+        .nav-cta { background: #000 !important; color: #F0EDE6 !important; }
+        .nav-cta:hover { background: var(--orange) !important; color: #000 !important; }
       `}</style>
 
       <nav>
         <Link href="/" className="nav-back">← DT.</Link>
-        <span className="nav-label">Animation &amp; Motion</span>
+        <ul className="nav-links">
+          <li><Link href="/web">Sites Web</Link></li>
+          <li><Link href="/animation" className="active">Animation &amp; Motion</Link></li>
+          <li><a href="/#contact" className="nav-cta">Contact</a></li>
+        </ul>
       </nav>
 
       {/* STAGE */}
@@ -223,8 +246,8 @@ export default function Animation() {
           <div id="face-lottie" ref={faceLottieRef}></div>
         </div>
 
-        {/* Windows 98 */}
-        {wins.map(w => (
+        {/* Windows 98 — desktop only, kept unmounted on mobile to avoid loading these videos twice */}
+        {isMobile === false && wins.map(w => (
           <div key={w.id} className={`win98${w.vertical ? ' vertical' : ''}`} id={w.id} style={{ position: 'fixed', width: w.vertical ? 'min(260px, 22vw)' : 'min(430px, 40vw)', ...w.style }}>
             <div className="win-titlebar">
               <span className="win-title-text"><span className="win-title-icon">🎬</span>{w.label}</span>
@@ -316,7 +339,7 @@ export default function Animation() {
         <div className="section-label" style={{color:'rgba(240,237,230,0.35)'}}>Motion &amp; Animation — 04 projets</div>
         <h2 className="mobile-videos-title">Motion<br /><span className="violet">Design.</span></h2>
         <div className="mobile-videos-grid">
-          {wins.map(w => (
+          {isMobile === true && wins.map(w => (
             <div key={`m-${w.id}`} className={`mobile-video-card${w.vertical ? ' vertical' : ''}`} onClick={() => openModal(w.src, w.title)} style={{cursor:'pointer'}}>
               <video src={w.src} autoPlay muted loop playsInline preload="none"></video>
               <span className="mobile-video-label">{w.label} ▶</span>

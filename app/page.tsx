@@ -1,6 +1,7 @@
 'use client'
 import { useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Home() {
   useEffect(() => {
@@ -117,21 +118,22 @@ export default function Home() {
       <section className="what-i-do reveal">
         <div className="section-label">Capacités — 06 domaines</div>
         <h2 className="what-title">Ce que je peux<br /><span className="violet">construire.</span></h2>
-        <p className="services-intro">Des systèmes IA <strong>utilisables</strong> — pas des démos,<br />des outils déployés en production.</p>
+        <p className="services-intro">Du <strong>site web</strong> à l&apos;agent IA — un seul interlocuteur,<br />des outils déployés en production.</p>
         <div className="services-grid services-grid-2">
           {[
-            { n:'01', t:'Voice Bots\nIA', d:'Agents vocaux multilingues capables de répondre, guider et automatiser des interactions clients — FR, EN, NL.', tags:['STT · TTS','LLM','ElevenLabs','Vercel'] },
-            { n:'02', t:'Automatisa-\ntion', d:'Workflows automatisés pour réduire les tâches répétitives et connecter vos outils existants sans friction.', tags:['N8N','APIs','CRM','PDF · Emails'] },
-            { n:'03', t:'Intégration\nAPI', d:'Connexion entre services, IA et bases de données pour créer des outils opérationnels rapidement.', tags:['REST APIs','Supabase','Webhooks','JSON'] },
-            { n:'04', t:'Agents\nIA', d:"Agents capables d'exécuter des actions, rechercher des données et orchestrer plusieurs outils automatiquement.", tags:['RAG','Function Calling','MCP','Claude · OpenAI'] },
-            { n:'05', t:'Outils\nMétiers', d:'Outils internes simples et rapides pour PME, artisans et startups — adaptés à votre flux de travail réel.', tags:['Dashboard','Génération PDF','Base de données'] },
-            { n:'06', t:'Sites &\nInterfaces', d:'Landing pages et interfaces modernes pensées pour être comprises et converties — du design au déploiement.', tags:['UI','SEO','Vercel','Responsive'] },
+            { n:'01', t:'Sites &\nInterfaces', d:'Landing pages et interfaces modernes pensées pour être comprises et converties — du design au déploiement.', tags:['UI','SEO','Vercel','Responsive'], proof:{ label:'Voir les projets', href:'/web' } },
+            { n:'02', t:'Voice Bots\nIA', d:'Agents vocaux multilingues capables de répondre, guider et automatiser des interactions clients — FR, EN, NL.', tags:['STT · TTS','LLM','ElevenLabs','Vercel'], proof:{ label:'Voir : Camille Charleroi', href:'/web' } },
+            { n:'03', t:'Agents\nIA', d:"Agents capables d'exécuter des actions, rechercher des données et orchestrer plusieurs outils automatiquement.", tags:['RAG','Function Calling','MCP','Claude · OpenAI'] },
+            { n:'04', t:'Automatisa-\ntion', d:'Workflows automatisés pour réduire les tâches répétitives et connecter vos outils existants sans friction.', tags:['N8N','APIs','CRM','PDF · Emails'] },
+            { n:'05', t:'Intégration\nAPI', d:'Connexion entre services, IA et bases de données pour créer des outils opérationnels rapidement.', tags:['REST APIs','Supabase','Webhooks','JSON'] },
+            { n:'06', t:'Outils\nMétiers', d:'Outils internes simples et rapides pour PME, artisans et startups — adaptés à votre flux de travail réel.', tags:['Dashboard','Génération PDF','Base de données'] },
           ].map((s, i) => (
             <div key={i} className="service-item" data-bignum={s.n}>
               <span className="service-num">{s.n} — {s.t.split('\n')[0]} {s.t.split('\n')[1]}</span>
               <h3 className="service-title">{s.t.split('\n')[0]}<br />{s.t.split('\n')[1]}</h3>
               <p className="service-desc">{s.d}</p>
               <div className="service-tags">{s.tags.map((tag,j) => <span key={j} className="tag">{tag}</span>)}</div>
+              {s.proof && <Link href={s.proof.href} className="service-proof">{s.proof.label} <span className="arr">→</span></Link>}
             </div>
           ))}
         </div>
@@ -144,11 +146,17 @@ export default function Home() {
           <h2 className="projects-title">Ce que<br />je <span className="violet">construis.</span></h2>
           <div>
             <Link href="/web" className="project-mini">
+              <span className="project-mini-thumb">
+                <Image src="/picture/camille-preview.png" alt="Camille Charleroi" width={160} height={100} />
+              </span>
               <span className="project-mini-num">01</span>
               <span className="project-mini-name">Camille Charleroi</span>
               <span className="project-mini-type">Voice Bot IA<br />Secteur Public</span>
             </Link>
             <Link href="/web" className="project-mini">
+              <span className="project-mini-thumb">
+                <Image src="/picture/dd2-preview-1.png" alt="Next Business" width={160} height={100} />
+              </span>
               <span className="project-mini-num">02</span>
               <span className="project-mini-name">Next Business</span>
               <span className="project-mini-type">Refonte Web<br />Chatbot IA</span>
