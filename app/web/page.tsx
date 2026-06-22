@@ -62,7 +62,7 @@ export default function Web() {
             </div>
             <a href="https://camille-charleroi-ybuw.vercel.app/" target="_blank" rel="noopener noreferrer" className="project-feature-link"><span>Voir l&apos;aperçu ↗</span></a>
           </div>
-          <div className="project-feature-visual">
+          <a href="https://camille-charleroi-ybuw.vercel.app/" target="_blank" rel="noopener noreferrer" className="project-feature-visual" aria-label="Ouvrir le site Camille Charleroi">
             <div className="browser-chrome">
               <span className="dot red"></span><span className="dot yel"></span><span className="dot grn"></span>
               <span className="url">camille-charleroi.vercel.app</span>
@@ -71,7 +71,7 @@ export default function Web() {
               <Image src="/picture/camille-preview.png" alt="Camille Charleroi" width={800} height={500} />
               <div className="project-feature-visual-overlay"></div>
             </div>
-          </div>
+          </a>
         </div>
 
         {/* Next Business */}
@@ -87,7 +87,7 @@ export default function Web() {
             </div>
             <a href="https://nexus-nine-drab.vercel.app/" target="_blank" rel="noopener noreferrer" className="project-feature-link"><span>Voir l&apos;aperçu ↗</span></a>
           </div>
-          <div className="project-feature-visual">
+          <a href="https://nexus-nine-drab.vercel.app/" target="_blank" rel="noopener noreferrer" className="project-feature-visual" aria-label="Ouvrir le site Next Business">
             <div className="browser-chrome">
               <span className="dot red"></span><span className="dot yel"></span><span className="dot grn"></span>
               <span className="url">next-business.vercel.app</span>
@@ -96,7 +96,7 @@ export default function Web() {
               <Image src="/picture/dd2-preview-1.png" alt="Next Business" width={800} height={500} />
               <div className="project-feature-visual-overlay"></div>
             </div>
-          </div>
+          </a>
         </div>
       </section>
 

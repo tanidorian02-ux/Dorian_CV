@@ -922,6 +922,7 @@ footer {
 /* Visual frame — add browser chrome */
 .project-feature-visual {
   position: relative;
+  display: block;
   border-radius: 6px !important;
   border: 1px solid rgba(240,237,230,0.14) !important;
   background: rgba(240,237,230,0.04);
@@ -929,6 +930,7 @@ footer {
   transition: box-shadow 0.4s, transform 0.4s;
   aspect-ratio: auto !important;
   overflow: visible !important;
+  text-decoration: none;
 }
 .project-feature:hover .project-feature-visual {
   box-shadow: 16px 16px 0 rgba(167,139,250,0.28);
